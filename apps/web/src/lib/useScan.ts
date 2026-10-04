@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import type { ErrorCode, Report, ScanMode, StepStatus } from '@teardown/core';
-import { ApiFailure, cancelScan, eventsUrl, startScan } from './api';
+import type { ErrorCode, Report, ScanEvent, ScanMode, StepStatus } from '@teardown/core';
+import { ApiFailure, streamScan } from './api';
 
 export interface Step {
   name: string;
@@ -94,86 +94,83 @@ function reducer(s: ScanState, a: Action): ScanState {
   return s;
 }
 
-/** Drives one scan at a time: POST, then SSE with automatic reconnect (Last-Event-ID replay). */
+/**
+ * Drives one scan at a time over a single streaming request: the response body carries the
+ * scan's events until `done`. Aborting the request cancels the scan on the server.
+ */
 export function useScan() {
   const [state, dispatch] = useReducer(reducer, { phase: 'idle' } as ScanState);
-  const es = useRef<EventSource | null>(null);
-  const scanId = useRef<string | null>(null);
+  const ctrl = useRef<AbortController | null>(null);
 
-  const close = useCallback(() => {
-    es.current?.close();
-    es.current = null;
+  const stop = useCallback(() => {
+    ctrl.current?.abort();
+    ctrl.current = null;
   }, []);
 
-  useEffect(() => close, [close]);
-
-  const listen = useCallback(
-    (id: string) => {
-      close();
-      const source = new EventSource(eventsUrl(id));
-      es.current = source;
-      const on = <T,>(type: string, fn: (d: T) => void) =>
-        source.addEventListener(type, (e) => {
-          if (!(e instanceof MessageEvent) || typeof e.data !== 'string') return;
-          dispatch({ t: 'reconnecting', on: false });
-          fn(JSON.parse(e.data) as T);
-        });
-      on<{ position: number }>('queued', (d) => dispatch({ t: 'queued', position: d.position }));
-      on('started', () => dispatch({ t: 'started' }));
-      on<Step>('step', (d) => dispatch({ t: 'step', step: d }));
-      on<{ url: string; index: number; total: number }>('page_started', (d) => dispatch({ t: 'page_started', ...d }));
-      on<{ url: string; findingCount: number }>('page_done', (d) => dispatch({ t: 'page_done', url: d.url, findingCount: d.findingCount }));
-      on('ai_started', () => dispatch({ t: 'ai' }));
-      on<{ report: Report; cached: boolean; cachedAt?: string }>('report', (d) => dispatch({ t: 'report', report: d.report, cached: d.cached, cachedAt: d.cachedAt }));
-      on<{ code: ErrorCode; message: string }>('error', (d) => dispatch({ t: 'error', code: d.code, message: d.message }));
-      on('done', () => close());
-      let failures = 0;
-      source.onerror = () => {
-        // EventSource reconnects by itself and resends Last-Event-ID; give up after repeated failures.
-        failures++;
-        dispatch({ t: 'reconnecting', on: true });
-        if (source.readyState === EventSource.CLOSED || failures > 8) {
-          close();
-          dispatch({ t: 'error', code: 'NETWORK', message: 'The connection to the scanner was lost and the scan result could not be fetched. Start the scan again.' });
-        }
-      };
-      source.onopen = () => {
-        failures = 0;
-      };
-    },
-    [close],
-  );
+  useEffect(() => stop, [stop]);
 
   const start = useCallback(
     async (url: string, mode: ScanMode, fresh = false) => {
-      close();
+      stop();
+      const c = new AbortController();
+      ctrl.current = c;
       dispatch({ t: 'start', url, mode });
+      let accepted = false;
+      let finished = false;
+      const onEvent = (e: ScanEvent) => {
+        if (c.signal.aborted) return;
+        if (!accepted) {
+          accepted = true;
+          dispatch({ t: 'accepted', id: 'stream' });
+        }
+        switch (e.type) {
+          case 'queued':
+            return dispatch({ t: 'queued', position: e.data.position });
+          case 'started':
+            return dispatch({ t: 'started' });
+          case 'step':
+            return dispatch({ t: 'step', step: e.data });
+          case 'page_started':
+            return dispatch({ t: 'page_started', url: e.data.url, index: e.data.index, total: e.data.total });
+          case 'page_done':
+            return dispatch({ t: 'page_done', url: e.data.url, findingCount: e.data.findingCount });
+          case 'ai_started':
+            return dispatch({ t: 'ai' });
+          case 'report':
+            finished = true;
+            return dispatch({ t: 'report', report: e.data.report, cached: e.data.cached, cachedAt: e.data.cachedAt });
+          case 'error':
+            finished = true;
+            return dispatch({ t: 'error', code: e.data.code, message: e.data.message });
+          case 'done':
+            return;
+        }
+      };
       try {
-        const { scanId: id } = await startScan(url, mode, fresh);
-        scanId.current = id;
-        dispatch({ t: 'accepted', id });
-        listen(id);
+        await streamScan(url, mode, fresh, c.signal, onEvent);
+        if (!finished && !c.signal.aborted) {
+          dispatch({ t: 'error', code: 'NETWORK', message: 'The scan stopped before the report arrived. Start the scan again.' });
+        }
       } catch (e) {
+        if (c.signal.aborted) return;
         const f = e instanceof ApiFailure ? e : new ApiFailure('NETWORK', 'Something went wrong starting the scan. Try again.');
         dispatch({ t: 'error', code: f.code, message: f.message, resetAt: f.resetAt, suggestMode: f.suggestMode });
+      } finally {
+        if (ctrl.current === c) ctrl.current = null;
       }
     },
-    [close, listen],
+    [stop],
   );
 
   const cancel = useCallback(async () => {
-    close();
-    const id = scanId.current;
-    scanId.current = null;
+    stop();
     dispatch({ t: 'reset' });
-    if (id) await cancelScan(id);
-  }, [close]);
+  }, [stop]);
 
   const reset = useCallback(() => {
-    close();
-    scanId.current = null;
+    stop();
     dispatch({ t: 'reset' });
-  }, [close]);
+  }, [stop]);
 
   return { state, start, cancel, reset };
 }

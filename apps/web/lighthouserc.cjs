@@ -1,11 +1,12 @@
-// Lighthouse CI for the static export: the landing page must score 95+ in every category.
+// Lighthouse CI for the production build: the landing page must score 95+ in every category.
 const { chromium } = require('playwright');
 
 module.exports = {
   ci: {
     collect: {
-      staticDistDir: './out',
-      url: ['http://localhost/'],
+      startServerCommand: 'node scripts/serve.mjs',
+      startServerReadyPattern: 'serving the production build',
+      url: ['http://127.0.0.1:3000/'],
       numberOfRuns: 5,
       chromePath: process.env.CHROME_PATH || chromium.executablePath(),
       settings: { chromeFlags: '--headless=new --no-sandbox' },

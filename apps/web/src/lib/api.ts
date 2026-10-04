@@ -1,6 +1,7 @@
-import type { ApiError, ErrorCode, Health, Quota, Report, ScanMode } from '@teardown/core';
+import type { ApiError, ErrorCode, Health, Quota, Report, ScanEvent, ScanMode } from '@teardown/core';
 
-export const SCANNER_URL = (process.env.NEXT_PUBLIC_SCANNER_URL || 'http://localhost:7860').replace(/\/+$/, '');
+/** Empty = same origin (the Vercel project serves the scanner under /api). Set it to use a separate Docker scanner. */
+export const SCANNER_URL = (process.env.NEXT_PUBLIC_SCANNER_URL || '').replace(/\/+$/, '');
 
 export class ApiFailure extends Error {
   constructor(
@@ -37,29 +38,61 @@ async function call<T>(path: string, init?: RequestInit): Promise<{ data: T; res
 
 /** Warm-up ping. Resolves with health, or rejects after `timeoutMs`. */
 export async function health(timeoutMs = 60_000): Promise<Health> {
-  return (await call<Health>('/health', { signal: AbortSignal.timeout(timeoutMs), cache: 'no-store' })).data;
+  return (await call<Health>('/api/health', { signal: AbortSignal.timeout(timeoutMs), cache: 'no-store' })).data;
 }
 
 export async function quota(): Promise<Quota> {
   return (await call<Quota>('/api/quota', { cache: 'no-store' })).data;
 }
 
-export async function startScan(url: string, mode: ScanMode, fresh = false): Promise<{ scanId: string; cached: boolean }> {
-  return (
-    await call<{ scanId: string; cached: boolean }>('/api/scan', {
+/**
+ * Starts a scan and streams its events from the same response (`event:` / `data:` frames).
+ * Errors before the scan starts (invalid URL, rate limit) come back as JSON and throw ApiFailure.
+ * Aborting `signal` cancels the scan on the server.
+ */
+export async function streamScan(url: string, mode: ScanMode, fresh: boolean, signal: AbortSignal, onEvent: (e: ScanEvent) => void): Promise<void> {
+  let res: Response;
+  try {
+    res = await fetch(`${SCANNER_URL}/api/scan/stream`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ url, mode, ...(fresh ? { fresh: true } : {}) }),
-    })
-  ).data;
-}
-
-export async function cancelScan(id: string): Promise<void> {
-  await call<void>(`/api/scan/${id}`, { method: 'DELETE' }).catch(() => undefined);
-}
-
-export function eventsUrl(id: string): string {
-  return `${SCANNER_URL}/api/scan/${id}/events`;
+      signal,
+    });
+  } catch {
+    if (signal.aborted) return;
+    throw new ApiFailure('NETWORK', NETWORK_MESSAGE);
+  }
+  if (!res.ok || !res.body || !/event-stream/.test(res.headers.get('content-type') ?? '')) {
+    const body = (await res.json().catch(() => null)) as ApiError | null;
+    if (body?.error) throw new ApiFailure(body.error.code, body.error.message, body.error.resetAt, body.error.suggestMode);
+    throw new ApiFailure('SCAN_FAILED', `The scanner answered with HTTP ${res.status}. Try again in a minute.`);
+  }
+  const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+  let buf = '';
+  for (;;) {
+    let chunk: ReadableStreamReadResult<string>;
+    try {
+      chunk = await reader.read();
+    } catch {
+      if (signal.aborted) return;
+      throw new ApiFailure('NETWORK', 'The connection to the scanner dropped before the report arrived. Start the scan again.');
+    }
+    if (chunk.done) break;
+    buf += chunk.value;
+    let i: number;
+    while ((i = buf.indexOf('\n\n')) >= 0) {
+      const block = buf.slice(0, i);
+      buf = buf.slice(i + 2);
+      let type = '';
+      let data = '';
+      for (const line of block.split('\n')) {
+        if (line.startsWith('event: ')) type = line.slice(7);
+        else if (line.startsWith('data: ')) data += line.slice(6);
+      }
+      if (type && data) onEvent({ type, data: JSON.parse(data) } as ScanEvent);
+    }
+  }
 }
 
 async function toDataUrl(src: string): Promise<string | undefined> {

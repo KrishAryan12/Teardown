@@ -142,12 +142,14 @@ export class AiChain implements AiService {
     const ctx = { scores: input.scores, host: input.host, pageCount: input.pageCount };
     if (!this.available()) return deterministicAdvice(ctx, groups, 'skipped', this.unavailableReason());
     const errors: string[] = [];
+    const deadline = Date.now() + this.cfg.AI_TOTAL_BUDGET_MS;
     for (const p of this.providers) {
       if (!p.apiKey) continue;
       for (const model of p.models) {
         const key = `${p.name}:${model}`;
         if (this.breaker.isOpen(key)) continue;
         for (let attempt = 0; attempt < 2; attempt++) {
+          if (Date.now() > deadline) break; // out of time for this scan: fall back
           if (!this.globalBudget() || !this.counters.has(`ai:${p.name}`, p.dailyCap)) break;
           try {
             const res = await this.call(p, model, input, attempt > 0);

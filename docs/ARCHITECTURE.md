@@ -1,48 +1,62 @@
 # Architecture
 
+Teardown deploys as **one Vercel project**: Next.js pre-renders the site and serves the scanner as route handlers (Vercel Functions). The same scanner code also runs as a long-lived Fastify server in Docker. Both speak the same API, so the frontend works with either.
+
 ```mermaid
 flowchart LR
-  subgraph Browser["Visitor's browser (static site)"]
-    UI["Next.js static export<br/>landing · bench log · report sheet"]
+  subgraph Browser["Visitor's browser"]
+    UI["Pages: landing · bench log · report sheet"]
     EXP["Exporters (client-side)<br/>Markdown brief · JSON"]
   end
-  subgraph Scanner["Scanner service (Docker, HF Space)"]
-    API["Fastify API<br/>CORS · limits · queue · cache · SSE"]
-    RUN["Scan pipeline"]
-    PROXY["SSRF-guarding<br/>forward proxy"]
-    PW["Playwright Chromium<br/>desktop + mobile contexts"]
-    LH["Lighthouse<br/>(own Chromium, mutex 1)"]
-    RULES["Rules engine · axe-core<br/>brand extraction · scoring"]
-    AI["AI chain<br/>Gemini → Groq → HF → OpenRouter"]
-    PDF["PDF renderer<br/>(JS off, network off)"]
+  subgraph Vercel["Vercel project (apps/web)"]
+    STATIC["Pre-rendered pages (CDN)"]
+    subgraph Fn["Functions: /api/*"]
+      API["serverless.ts<br/>admit · stream · PDF"]
+      RUN["Scan pipeline (apps/scanner)"]
+      PROXY["SSRF-guarding proxy"]
+      PW["Serverless Chromium<br/>desktop + mobile"]
+      RULES["Rules · axe · brand · scoring"]
+    end
   end
+  REDIS[("Upstash Redis<br/>limits · budgets · scan gate")]
+  PSI["PageSpeed Insights"]
+  LLM["Free-tier LLMs<br/>Gemini · Groq · HF · OpenRouter"]
   WEB(("Target website"))
-  PSI["PageSpeed Insights<br/>(optional)"]
-  LLM["Free-tier LLM APIs"]
 
-  UI -- "POST /api/scan" --> API
-  API -- "SSE events + report" --> UI
-  UI -- "POST /api/export/pdf" --> PDF
+  UI --> STATIC
+  UI -- "POST /api/scan/stream<br/>(events stream back)" --> API
+  UI -- "POST /api/export/pdf" --> API
   UI --> EXP
+  API --> REDIS
   API --> RUN
-  RUN --> PW
-  RUN --> LH
+  RUN --> PW --> PROXY --> WEB
   RUN --> RULES
-  RUN --> AI
-  RUN -. "optional" .-> PSI
-  PW --> PROXY
-  LH --> PROXY
-  PROXY --> WEB
-  AI --> LLM
+  RUN --> PSI
+  RUN --> LLM
 ```
+
+## Two deployment modes
+
+| | Vercel (default) | Docker server (alternative) |
+|---|---|---|
+| Entry | `apps/scanner/src/serverless.ts` via `apps/web/src/app/api/*/route.ts` | `apps/scanner/src/main.ts` (Fastify) |
+| Scan request | `POST /api/scan/stream`: one request admits, runs and streams the scan | Same route, plus the queue-based `POST /api/scan` + `GET /api/scan/:id/events` (SSE with replay) |
+| Concurrency | Upstash sorted-set gate (`MAX_CONCURRENT_SCANS`), callers wait up to 60 s with `queued` events | In-process FIFO queue with positions |
+| Limits and budgets | Upstash Redis (`UpstashRateStore`, `SharedDailyCounters`) | In memory (`MemoryRateStore`, `DailyCounters`) |
+| Browser | `@sparticuz/chromium` with `playwright` | Playwright's Chromium (official Playwright image) |
+| Performance | PageSpeed Insights, else estimate | PSI, else local Lighthouse (mutex 1), else estimate |
+| Report cache | Per warm instance | Per server |
+| Caps | 300 s per call: 5 pages in site mode, 270 s scan deadline, 4 MB reports | 15 pages, 6-minute site budget, 10 MB reports |
+
+In-page scripts and PDF fonts are compiled into `src/generated/embedded.ts` (from `inpage/*.js` and the Fontsource packages), so neither bundle reads asset files at runtime.
 
 ## Packages
 
 | Path | What it is |
 |---|---|
 | `packages/core` | The contract. Zod schemas and types for `Report`, findings, brand profile, API errors and events; scoring; colour maths; design tokens; the JSON and Markdown exporters. Pure functions, no I/O. Imported as TypeScript source by both apps, so they can't disagree about the data. Zod-free subpaths (`/scoring`, `/exporters`, `/tokens`, `/color`) keep the web bundle small. |
-| `apps/scanner` | Fastify API, scan pipeline, Playwright capture, rules, axe mapping, brand extraction, Lighthouse/PSI, AI chain, PDF. Bundled with esbuild into `dist/main.js`; in-page scripts ship as plain JS next to it. |
-| `apps/web` | Next.js App Router, `output: 'export'`. No server code: it talks to the scanner directly from the browser. |
+| `apps/scanner` | Scan pipeline, Playwright capture, rules, axe mapping, brand extraction, PSI/Lighthouse, AI chain, PDF. Two entries: `serverless.ts` (imported by the Next.js route handlers) and `main.ts` (Fastify, bundled with esbuild for Docker). |
+| `apps/web` | Next.js App Router: pre-rendered pages plus the `/api` route handlers that call the scanner. |
 | `fixtures/pages` | Test pages: `bad.html` (deliberately terrible), `good.html`, `sample/` (the demo shop behind the sample report), `site/` (multi-page site for full-site mode). |
 
 ## A scan, step by step
@@ -73,7 +87,3 @@ flowchart LR
 ## Security
 
 See [SECURITY.md](SECURITY.md) for the threat model and SSRF design.
-
-## Why the browser talks to the scanner directly
-
-Free serverless functions have short execution limits that would cut long scans off. The static frontend therefore calls the scanner itself, which enforces CORS (`ALLOWED_ORIGINS`) and, optionally, Cloudflare Turnstile.

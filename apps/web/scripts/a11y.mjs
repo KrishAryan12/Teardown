@@ -36,7 +36,7 @@ try {
     await page.waitForSelector('.teaser', { timeout: 15000 });
     await axe(page, `landing with sample teaser (${vp.name})`);
 
-    await page.goto(`${BASE}/sample/`, { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/sample`, { waitUntil: 'networkidle' });
     await page.waitForSelector('#sheet-title', { state: 'attached', timeout: 15000 });
     await page.waitForSelector('.pin-btn');
     // Reduced motion: the final state shows immediately (no running reveal).
@@ -44,7 +44,7 @@ try {
     // Open the first task so its body is checked too.
     await axe(page, `sample report (${vp.name})`);
 
-    await page.goto(`${BASE}/privacy/`, { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/privacy`, { waitUntil: 'networkidle' });
     await axe(page, `privacy (${vp.name})`);
     await ctx.close();
   }
@@ -59,7 +59,7 @@ try {
   await kb.keyboard.press('Enter');
   if ((await kb.evaluate(() => location.hash)) !== '#main') fail('skip link should jump to #main');
   // Pins are keyboard reachable and open their task.
-  await kb.goto(`${BASE}/sample/`, { waitUntil: 'networkidle' });
+  await kb.goto(`${BASE}/sample`, { waitUntil: 'networkidle' });
   await kb.waitForSelector('.pin-btn');
   await kb.keyboard.press('Escape'); // skips the reveal
   await kb.locator('.pin-btn').first().focus();
@@ -77,7 +77,7 @@ try {
   else console.log('✓ focus: URL slot shows an outline');
   // 320px: no horizontal scrolling.
   await kb.setViewportSize({ width: 320, height: 640 });
-  for (const path of ['/', '/sample/', '/privacy/']) {
+  for (const path of ['/', '/sample', '/privacy']) {
     await kb.goto(`${BASE}${path}`, { waitUntil: 'networkidle' });
     await kb.waitForTimeout(300);
     const w = await kb.evaluate(() => document.documentElement.scrollWidth);
@@ -86,7 +86,7 @@ try {
   console.log('✓ 320px: no horizontal scroll');
   // Phone: tapping a pin opens the bottom sheet.
   const ph = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
-  await ph.goto(`${BASE}/sample/`, { waitUntil: 'networkidle' });
+  await ph.goto(`${BASE}/sample`, { waitUntil: 'networkidle' });
   await ph.waitForSelector('.pin-btn');
   await ph.locator('.pin-btn').first().scrollIntoViewIfNeeded();
   await ph.locator('.pin-btn').first().tap();

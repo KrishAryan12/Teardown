@@ -66,7 +66,7 @@ export default function SampleTeaser({ report }: { report: Report }) {
           ))}
         </div>
         <p style={{ marginTop: 24 }}>
-          <a className="btn btn-primary" href="/sample/">
+          <a className="btn btn-primary" href="/sample">
             Open the full sample report
           </a>
         </p>

@@ -18,6 +18,7 @@ playwright-report/
 # Internal owner docs, never published
 PROMPT.md
 SETUP.md
+OWNER_SETUP.md
 
 # Next.js generated
 apps/web/next-env.d.ts

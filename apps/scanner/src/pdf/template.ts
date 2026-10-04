@@ -1,29 +1,8 @@
-import { readFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
-import { dirname, join } from 'node:path';
+import { PDF_FONTS_CSS } from '../generated/embedded';
 import { allFindings, brandToTokens, defaultVerify, orderedGroups, type Finding, type Report, type Severity } from '@teardown/core';
 
-const require = createRequire(import.meta.url);
-
-/* ------------------------------- fonts ---------------------------------- */
-
-let fontCss: string | null = null;
-function fonts(): string {
-  if (fontCss) return fontCss;
-  const face = (pkg: string, family: string, file: string, weight: number) => {
-    const dir = dirname(require.resolve(`${pkg}/package.json`));
-    const b64 = readFileSync(join(dir, 'files', file)).toString('base64');
-    return `@font-face{font-family:'${family}';font-weight:${weight};font-style:normal;src:url(data:font/woff2;base64,${b64}) format('woff2');}`;
-  };
-  fontCss = [
-    face('@fontsource/big-shoulders-display', 'Big Shoulders Display', 'big-shoulders-display-latin-700-normal.woff2', 700),
-    face('@fontsource/big-shoulders-display', 'Big Shoulders Display', 'big-shoulders-display-latin-800-normal.woff2', 800),
-    face('@fontsource/public-sans', 'Public Sans', 'public-sans-latin-400-normal.woff2', 400),
-    face('@fontsource/public-sans', 'Public Sans', 'public-sans-latin-600-normal.woff2', 600),
-    face('@fontsource/martian-mono', 'Martian Mono', 'martian-mono-latin-400-normal.woff2', 400),
-  ].join('\n');
-  return fontCss;
-}
+/* Fonts are compiled into src/generated/embedded.ts (base64 woff2), so the PDF never needs the network or the filesystem. */
+const fonts = () => PDF_FONTS_CSS;
 
 /* ------------------------------- helpers -------------------------------- */
 

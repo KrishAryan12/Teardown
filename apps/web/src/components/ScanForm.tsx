@@ -130,6 +130,8 @@ export function ScanForm({ onScan, initialUrl = '', initialMode = 'single', busy
         </p>
         {quota && !quota.aiAvailable && <p>AI-written advice is unavailable today, so fixes will use Teardown&apos;s built-in instructions.</p>}
         {quota?.perfEngine === 'lighthouse' && <p>Performance is measured with Lighthouse on a small shared server: indicative lab data.</p>}
+        {quota?.perfEngine === 'psi' && <p>Performance scores come from Google PageSpeed Insights.</p>}
+        {quota?.perfEngine === 'estimated' && <p>Performance is estimated from page weight and requests today (no lab engine available).</p>}
       </div>
     </form>
   );

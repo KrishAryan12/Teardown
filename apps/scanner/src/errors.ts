@@ -1,4 +1,4 @@
-import type { ErrorCode } from '@teardown/core';
+import type { ApiError, ErrorCode } from '@teardown/core';
 
 /** Plain-language messages: what happened and what to do. Never stack traces. */
 export const ERROR_MESSAGES: Record<ErrorCode, string> = {
@@ -28,11 +28,48 @@ export class ScanError extends Error {
   }
 }
 
+/** Structural check: bundles can end up with two copies of this module, which breaks instanceof. */
+export function isScanError(err: unknown): err is ScanError {
+  return err instanceof ScanError || (err instanceof Error && err.name === 'ScanError' && typeof (err as ScanError).code === 'string');
+}
+
 export function toScanError(err: unknown): ScanError {
-  if (err instanceof ScanError) return err;
+  if (isScanError(err)) return err;
   const msg = err instanceof Error ? err.message : String(err);
   if (/timeout|timed out|ETIMEDOUT/i.test(msg)) return new ScanError('TIMEOUT');
   if (/ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET|ERR_NAME_NOT_RESOLVED|ERR_CONNECTION|EHOSTUNREACH|ENETUNREACH/i.test(msg))
     return new ScanError('UNREACHABLE');
   return new ScanError('SCAN_FAILED');
+}
+
+/** HTTP status for each error code (shared by the Fastify server and the serverless handlers). */
+export const HTTP_STATUS: Partial<Record<ErrorCode, number>> = {
+  INVALID_URL: 400,
+  BAD_REQUEST: 400,
+  BLOCKED_TARGET: 422,
+  NOT_HTML: 422,
+  UNREACHABLE: 422,
+  TIMEOUT: 504,
+  TURNSTILE_FAILED: 403,
+  RATE_LIMITED: 429,
+  CAPACITY: 429,
+  QUEUE_FULL: 503,
+  NOT_FOUND: 404,
+  SCAN_FAILED: 500,
+};
+
+export function errorBody(err: ScanError): ApiError {
+  return {
+    error: {
+      code: err.code,
+      message: err.message,
+      ...(err.extra.resetAt ? { resetAt: err.extra.resetAt } : {}),
+      ...(err.extra.suggestMode ? { suggestMode: err.extra.suggestMode } : {}),
+    },
+  };
+}
+
+/** Seconds until resetAt, for Retry-After. */
+export function retryAfter(err: ScanError): number | undefined {
+  return err.extra.resetAt ? Math.max(1, Math.ceil((Date.parse(err.extra.resetAt) - Date.now()) / 1000)) : undefined;
 }

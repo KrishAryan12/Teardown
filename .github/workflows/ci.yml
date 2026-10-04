@@ -46,13 +46,10 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      # Built against a static mock scanner (see apps/web/scripts/mock-scanner.mjs) so the
-      # warm-up ping succeeds without a live scanner in CI.
+      # The site and the scanner API build as one Next.js app (as deployed on Vercel).
       - run: pnpm --filter @teardown/web build
         env:
-          NEXT_PUBLIC_SCANNER_URL: /__mock
           NEXT_TELEMETRY_DISABLED: '1'
-      - run: node apps/web/scripts/mock-scanner.mjs
       - name: Install Chromium
         run: pnpm --filter @teardown/scanner exec playwright install --with-deps chromium
       - name: Axe check on the landing and sample report

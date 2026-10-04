@@ -33,7 +33,7 @@ export function SiteHeader() {
             <a href="/#how-it-works">How it works</a>
           </li>
           <li>
-            <a href="/sample/">Sample report</a>
+            <a href="/sample">Sample report</a>
           </li>
           <li>
             <a href={REPO_URL}>GitHub</a>
@@ -50,7 +50,7 @@ export function SiteFooter() {
       <div>
         <p>
           Teardown scans public pages only, identifies itself as TeardownBot, and respects robots.txt for full-site scans. Reports aren&apos;t stored: they live in your browser
-          until you close the page. <a href="/privacy/">Privacy and AI use</a>.
+          until you close the page. <a href="/privacy">Privacy and AI use</a>.
         </p>
       </div>
       <div>

@@ -5,7 +5,7 @@ import { SampleReport } from './SampleReport';
 export const metadata: Metadata = {
   title: 'Sample report',
   description: 'A full Teardown report for a demo ceramics shop: annotated specimen, prioritised fixes, brand sheet and exports.',
-  alternates: { canonical: '/sample/' },
+  alternates: { canonical: '/sample' },
 };
 
 export default function SamplePage() {

@@ -15,10 +15,10 @@ export function nextUtcMidnight(now = Date.now()): string {
  * (PSI calls, AI calls per provider). Reset on restart/sleep, which is acceptable for v1.
  */
 export class DailyCounters {
-  private day = dayKey();
-  private counts = new Map<string, number>();
+  protected day = dayKey();
+  protected counts = new Map<string, number>();
 
-  private roll(): void {
+  protected roll(): void {
     const today = dayKey();
     if (today !== this.day) {
       this.day = today;

@@ -1,5 +1,6 @@
 import { chromium, type Browser, type BrowserContext, type BrowserContextOptions } from 'playwright';
 import { playwrightLaunchOptions } from './launchOptions';
+import { browserExecutable } from './executable';
 import { startGuardProxy, type GuardProxy } from '../security/proxy';
 import type { SsrfGuard } from '../security/guard';
 import { Semaphore } from '../util/limiter';
@@ -42,7 +43,9 @@ export class BrowserPool {
       // Retry once, per the fallback matrix.
       for (let attempt = 0; attempt < 2; attempt++) {
         try {
-          const b = await chromium.launch(playwrightLaunchOptions(proxyUrl, this.opts.noSandbox));
+          const exe = await browserExecutable();
+          const base = playwrightLaunchOptions(proxyUrl, this.opts.noSandbox || exe.serverless);
+          const b = await chromium.launch({ ...base, executablePath: exe.path, args: [...exe.args, ...(base.args ?? [])] });
           b.on('disconnected', () => {
             if (this.browser === b) this.browser = null;
             if (!this.closed) log.warn({ event: 'browser_disconnected' });

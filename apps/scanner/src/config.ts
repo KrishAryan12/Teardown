@@ -57,11 +57,17 @@ export const EnvSchema = z.object({
   AI_DAILY_CALLS_HUGGINGFACE: int(20),
   AI_DAILY_CALLS_OPENROUTER: int(40),
   AI_TIMEOUT_MS: int(45_000, 1000),
+  /** Total time the AI chain may spend per scan across all providers and retries. */
+  AI_TOTAL_BUDGET_MS: int(120_000, 5000),
+  /** Hard ceiling for one scan (serverless hosts kill longer calls). */
+  SCAN_DEADLINE_MS: int(30 * 60 * 1000, 30_000),
 
   // Performance
   PERF_ENGINE: z.enum(['auto', 'psi', 'lighthouse', 'estimate']).optional().default('auto'),
   PSI_API_KEY: optionalSecret,
   PSI_DAILY_CAP: int(500),
+  /** Run local Lighthouse when PSI is unavailable. Off by default on serverless hosts, which don't ship it. */
+  LIGHTHOUSE_ENABLED: bool(true),
   LIGHTHOUSE_TIMEOUT_MS: int(90_000, 10_000),
   PERF_MAX_PAGES_FULL: int(2, 0, 10),
 
@@ -94,8 +100,34 @@ export const EnvSchema = z.object({
 
 export type Config = z.infer<typeof EnvSchema>;
 
+/**
+ * Defaults for serverless hosts (Vercel: 2 GB, 1 vCPU, 300 s per call, 4.5 MB bodies). Applied
+ * only to settings the environment doesn't set explicitly.
+ */
+export const SERVERLESS_DEFAULTS: Record<string, string> = {
+  REPORT_MAX_BYTES: String(4_000_000),
+  SITE_MAX_PAGES: '5',
+  SITE_CONCURRENCY: '1',
+  SITE_BUDGET_MS: String(150_000),
+  PERF_MAX_PAGES_FULL: '0',
+  MAX_CONCURRENT_SCANS: '3',
+  PAGE_BUDGET_MS: String(45_000),
+  AI_TIMEOUT_MS: String(20_000),
+  AI_TOTAL_BUDGET_MS: String(45_000),
+  SCAN_DEADLINE_MS: String(270_000),
+  TRUST_PROXY_HOPS: '0',
+  LIGHTHOUSE_ENABLED: 'false',
+};
+
+export function withPlatformDefaults(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  if (!env.VERCEL) return env;
+  const out = { ...env };
+  for (const [k, v] of Object.entries(SERVERLESS_DEFAULTS)) if (out[k] === undefined || out[k] === '') out[k] = v;
+  return out;
+}
+
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
-  const parsed = EnvSchema.safeParse(env);
+  const parsed = EnvSchema.safeParse(withPlatformDefaults(env));
   if (!parsed.success) {
     const issues = parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
     throw new Error(`Invalid configuration: ${issues}`);

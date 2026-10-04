@@ -69,3 +69,21 @@ HF now documents Docker Spaces as needing PRO to create. Some existing free acco
 **D-23. Deployment is prepared and verified as far as possible without accounts.** `scripts/build-space.sh` assembles the Space folder (Dockerfile on `mcr.microsoft.com/playwright:v1.63.0-noble`, UID 1000, port 7860, README front matter `sdk: docker` / `app_port: 7860`). Docker isn't installed on the development machine, so the image itself was not built locally. Instead the Dockerfile's steps were replayed on the flattened folder: the frozen `pnpm install --filter "@teardown/scanner..."` succeeded, the esbuild bundle built, and the bundle started with `NODE_ENV=production`, refused private targets and scanned example.com end to end. The first real image build happens on the Space after `HF_DEPLOY_TOKEN` and `HF_SPACE` are set.
 
 **D-24. The web app ships `next typegen` before `tsc`** because `next-env.d.ts` imports generated route types that don't exist in a clean checkout.
+
+## Hosting change: Vercel Functions (2026-10-05)
+
+**D-25. The scanner moves to Vercel Functions; the site and scanner are one Vercel project.** HF Docker Spaces need PRO, and every always-free VM checked (Oracle, Google Cloud e2-micro, Koyeb, AWS) requires a card. Oracle rejected the owner's cards; AWS's free plan ends after 6 months; Render's free tier (512 MB, 0.1 CPU) is too slow for Chromium. Vercel Hobby functions (2 GB, 1 vCPU, 300 s, no card) can run a real browser. *Alternatives kept:* the Docker image and Fastify server stay for anyone with a server; the frontend talks to either.
+
+**D-26. One streaming request per scan.** Functions can't hold a queue or replay buffer between calls, so `POST /api/scan/stream` admits, runs and streams the scan in its response body (same `event:`/`data:` framing as SSE). The Fastify server gained the same route, so the frontend uses one protocol everywhere. Trade-off: a dropped connection loses the scan (the old SSE path could resume); cancelling is simply closing the request.
+
+**D-27. Shared state in Upstash Redis** (free, GitHub login): fixed-window rate limits (`UpstashRateStore`), daily AI/PSI budgets (`SharedDailyCounters`: snapshot per request, write-through increments), and a running-scan gate (sorted set scored by start time, stale entries pruned so a killed function can't hold a slot). Without Upstash env vars everything falls back to memory (local dev). Reports are cached per warm instance only: with screenshots they exceed the free Redis request size.
+
+**D-28. Performance on Vercel comes from PageSpeed Insights** (free key, no billing account), else the estimate. Lighthouse and chrome-launcher are loaded with non-literal dynamic imports and excluded from the function bundle; `LIGHTHOUSE_ENABLED` defaults to false on Vercel and the engine stops advertising Lighthouse if it can't be imported.
+
+**D-29. Serverless defaults** (applied only when `VERCEL` is set and the variable is unset): 5 pages / 150 s for site mode, Lighthouse off, 4 MB reports (4.5 MB body limit), 20 s per AI call and 45 s for the whole AI chain, 270 s scan deadline that reports `TIMEOUT` before Vercel kills the call at 300 s.
+
+**D-30. Assets compiled in.** In-page scripts and PDF fonts are generated into `apps/scanner/src/generated/embedded.ts` (`pnpm --filter @teardown/scanner gen`) because bundlers can't trace runtime file reads; a unit test fails if it's stale. Fontsource packages became dev dependencies.
+
+**D-31. Chromium on Vercel** is `@sparticuz/chromium` 153 (x64) driven by `playwright` 1.63 with an explicit `executablePath`. It only runs on Linux x64, so its first real run is on Vercel; locally the same code path uses Playwright's Chromium. The SSRF proxy runs in-process in the function, unchanged.
+
+**D-32. Static export dropped.** Route handlers need a server build; the pages are still pre-rendered. CI builds the Next app and runs axe and Lighthouse CI against `next start`; the mock scanner is gone because `/api/health` and `/api/quota` work in CI with in-memory limits.

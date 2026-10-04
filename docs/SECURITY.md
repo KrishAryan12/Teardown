@@ -27,7 +27,7 @@ Teardown runs a real browser against arbitrary URLs submitted by anonymous visit
    - forwards plain HTTP after validating the absolute URL, connecting via the guarded lookup;
    - handles `CONNECT` for HTTPS and WSS by validating host and port, resolving, and opening a raw TCP tunnel to the **validated IP**. TLS is not terminated;
    - refuses plain-HTTP WebSocket upgrades and origin-form requests.
-   Lighthouse drives a separate Chromium that Playwright's routing can't see; it gets the same flags, so the proxy protects it too.
+   Lighthouse drives a separate Chromium that Playwright's routing can't see; it gets the same flags, so the proxy protects it too. On Vercel the proxy runs inside the function process and the serverless Chromium is launched with the same flags.
 6. **Playwright routing (defence in depth)**: `context.route('**/*')` aborts requests whose URL fails the guard, counts sub-requests and aborts after the cap; downloads are refused, service workers are blocked, and permissions are denied by default.
 7. **Static fetches** (`safeFetch`): robots.txt, sitemaps, link checks and the no-browser fallback use Node `http/https` with the guarded lookup, manual redirects with re-validation, byte caps and timeouts.
 8. **Dev switch**: `ALLOW_PRIVATE_TARGETS=true` exists for local fixtures and tests only. The scanner refuses to start with it when `NODE_ENV=production`.

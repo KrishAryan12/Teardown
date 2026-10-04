@@ -1,7 +1,8 @@
 // Bundles the scanner (with @teardown/core inlined) into dist/main.js. Runtime npm deps stay
-// external and are installed in the image. In-page scripts are copied next to the bundle.
+// external and are installed in the image. In-page scripts and PDF fonts are compiled in
+// (src/generated/embedded.ts).
 import { build } from 'esbuild';
-import { cpSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync } from 'node:fs';
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 const external = Object.keys(pkg.dependencies).filter((d) => d !== '@teardown/core');
@@ -21,5 +22,3 @@ await build({
   banner: { js: "import { createRequire as __cr } from 'node:module'; const require = __cr(import.meta.url);" },
   logLevel: 'info',
 });
-cpSync('inpage', 'dist/inpage', { recursive: true });
-console.log('copied inpage scripts');

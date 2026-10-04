@@ -1,8 +1,8 @@
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import cors from '@fastify/cors';
-import { ReportSchema, ScanRequestSchema, type ApiError, type ErrorCode } from '@teardown/core';
+import { ReportSchema, ScanRequestSchema } from '@teardown/core';
 import { VERSION, type Config } from './config';
-import { ScanError } from './errors';
+import { HTTP_STATUS, ScanError, errorBody, retryAfter } from './errors';
 import { normalizeUrl } from './security/guard';
 import { LimitPolicy } from './limits/policy';
 import { MemoryRateStore, type RateStore } from './limits/rateStore';
@@ -11,21 +11,6 @@ import { ScanManager, type Runner } from './scan/manager';
 import type { Services } from './services';
 import { renderPdf } from './pdf/render';
 import { log } from './util/log';
-
-const STATUS: Partial<Record<ErrorCode, number>> = {
-  INVALID_URL: 400,
-  BAD_REQUEST: 400,
-  BLOCKED_TARGET: 422,
-  NOT_HTML: 422,
-  UNREACHABLE: 422,
-  TIMEOUT: 504,
-  TURNSTILE_FAILED: 403,
-  RATE_LIMITED: 429,
-  CAPACITY: 429,
-  QUEUE_FULL: 503,
-  NOT_FOUND: 404,
-  SCAN_FAILED: 500,
-};
 
 export interface ServerOptions {
   rateStore?: RateStore;
@@ -43,16 +28,9 @@ interface ReplyLike {
 
 function sendError(reply: ReplyLike | FastifyReply, err: ScanError) {
   const r = reply as ReplyLike;
-  const body: ApiError = {
-    error: {
-      code: err.code,
-      message: err.message,
-      ...(err.extra.resetAt ? { resetAt: err.extra.resetAt } : {}),
-      ...(err.extra.suggestMode ? { suggestMode: err.extra.suggestMode } : {}),
-    },
-  };
-  if (err.extra.resetAt) r.header('retry-after', Math.max(1, Math.ceil((Date.parse(err.extra.resetAt) - Date.now()) / 1000)));
-  return r.code(STATUS[err.code] ?? 400).send(body);
+  const ra = retryAfter(err);
+  if (ra) r.header('retry-after', ra);
+  return r.code(HTTP_STATUS[err.code] ?? 400).send(errorBody(err));
 }
 
 export async function buildServer(services: Services, opts: ServerOptions = {}): Promise<{ app: FastifyInstance; manager: ScanManager }> {
@@ -107,11 +85,14 @@ export async function buildServer(services: Services, opts: ServerOptions = {}):
 
   app.get('/', async () => ({ name: 'Teardown scanner', version: VERSION, docs: 'GET /health, GET /api/quota, POST /api/scan' }));
 
-  app.get('/health', async () => ({ ok: true, version: VERSION, queue: manager.stats() }));
+  const health = async () => ({ ok: true, version: VERSION, queue: manager.stats() });
+  app.get('/health', health);
+  app.get('/api/health', health);
 
   app.get('/api/quota', async (req) => policy.quota(ip(req), services.ai.available(), services.perf.active()));
 
-  app.post('/api/scan', async (req, reply) => {
+  /** Validation, cache and admission shared by POST /api/scan and POST /api/scan/stream. */
+  const admit = async (req: FastifyRequest, reply: FastifyReply): Promise<{ scanId: string; cached: boolean }> => {
     const parsed = ScanRequestSchema.safeParse(req.body);
     if (!parsed.success) throw new ScanError('INVALID_URL');
     const { url, mode, turnstileToken, fresh } = parsed.data;
@@ -124,13 +105,46 @@ export async function buildServer(services: Services, opts: ServerOptions = {}):
 
     const key = ScanManager.cacheKey(target.href, mode);
     const hit = fresh ? undefined : manager.cached(key);
-    if (hit) return reply.code(202).send({ scanId: manager.fromCache(url, target.hostname, mode, key, hit), cached: true });
+    if (hit) return { scanId: manager.fromCache(url, target.hostname, mode, key, hit), cached: true };
 
     if (manager.queueFull() || !manager.isAccepting()) throw new ScanError('QUEUE_FULL');
     const rl = await policy.admit(ip(req), target.hostname, mode);
     reply.header('x-ratelimit-limit', rl.limit).header('x-ratelimit-remaining', rl.remaining).header('x-ratelimit-reset', Math.ceil(rl.resetAt / 1000));
-    const scanId = manager.enqueue(target.href, target.hostname, mode, key);
-    return reply.code(202).send({ scanId, cached: false });
+    return { scanId: manager.enqueue(target.href, target.hostname, mode, key), cached: false };
+  };
+
+  app.post('/api/scan', async (req, reply) => reply.code(202).send(await admit(req, reply)));
+
+  /**
+   * One-request variant (same protocol as the serverless API): admits the scan, then streams its
+   * events in the response body until `done`. Closing the request cancels the scan.
+   */
+  app.post('/api/scan/stream', async (req, reply) => {
+    const { scanId } = await admit(req, reply);
+    reply.hijack();
+    const res = reply.raw;
+    res.writeHead(200, {
+      ...(reply.getHeaders() as Record<string, string>),
+      ...securityHeaders,
+      'content-type': 'text/event-stream; charset=utf-8',
+      'cache-control': 'no-cache, no-transform',
+      'x-accel-buffering': 'no',
+    });
+    let finished = false;
+    const heartbeat = setInterval(() => res.write(': heartbeat\n\n'), 15_000);
+    const unsubscribe = manager.subscribe(scanId, 0, (e) => {
+      res.write(`event: ${e.event.type}\ndata: ${JSON.stringify(e.event.data)}\n\n`);
+      if (e.event.type === 'done') {
+        finished = true;
+        clearInterval(heartbeat);
+        setImmediate(() => res.end());
+      }
+    });
+    req.raw.on('close', () => {
+      clearInterval(heartbeat);
+      unsubscribe?.();
+      if (!finished) manager.cancel(scanId);
+    });
   });
 
   app.delete<{ Params: { id: string } }>('/api/scan/:id', async (req, reply) => {

@@ -23,7 +23,7 @@ try {
     const raf = window.requestAnimationFrame.bind(window);
     window.requestAnimationFrame = (cb) => raf(() => cb(performance.now()));
   });
-  await page.goto(`http://127.0.0.1:${PORT}/sample/`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`http://127.0.0.1:${PORT}/sample`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.bed img', { state: 'visible' });
   // Frame the sheet: rail, specimen and fixes.
   const box = await page.locator('.sheet-grid').boundingBox();

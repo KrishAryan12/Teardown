@@ -13,6 +13,7 @@ export default tseslint.config(
       '.space-build/**',
       'apps/web/next-env.d.ts',
       'fixtures/**',
+      'apps/scanner/src/generated/**',
     ],
   },
   js.configs.recommended,

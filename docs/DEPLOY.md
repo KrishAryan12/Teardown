@@ -1,71 +1,90 @@
 # Deploying Teardown
 
-Two pieces: the **scanner** (a Docker container) and the **website** (static files). Both run on free tiers. Variable names below match `.env.example` exactly.
+Teardown deploys as **one Vercel project**: the website is pre-rendered, and the scanner runs as Vercel Functions under `/api`. Nothing here needs a card. A Docker image is also provided for anyone who prefers a long-running server (section 5).
 
-## 1. Scanner on a HuggingFace Space (Docker SDK)
+| Piece | Where | Free tier |
+|---|---|---|
+| Website + scanner API | Vercel (Hobby) | 2 GB / 1 vCPU functions, 300 s per call |
+| Rate limits and daily budgets | Upstash Redis | Free database, GitHub login |
+| Performance scores | Google PageSpeed Insights API | 25,000 calls/day, no billing account |
+| AI-written advice | Gemini (AI Studio), Groq, optional HF / OpenRouter | Free tiers |
 
-> **Check first:** HuggingFace's Spaces docs (checked 2026-10-04) say Docker Spaces need a PRO plan to *create*. If you can't create one on a free account, use the Render fallback in section 4; nothing else changes.
+## 1. Get the keys
 
-1. Create a Space at <https://huggingface.co/new-space>: SDK **Docker** (Blank template), hardware **CPU basic**, visibility **Public** (browsers call it directly). Name it e.g. `teardown-scanner`. Its URL will be `https://<user>-teardown-scanner.hf.space`.
-2. Create a **write** token (fine-grained, write access to this Space only) at <https://huggingface.co/settings/tokens>.
-3. In the GitHub repo, **Settings → Secrets and variables → Actions**:
-   - secret `HF_DEPLOY_TOKEN` = the write token;
-   - variable `HF_SPACE` = `<user>/teardown-scanner`.
-4. In the Space, **Settings → Variables and secrets**, add **secrets**:
+| Variable | Where to get it | Required |
+|---|---|---|
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | <https://console.upstash.com> → Redis → Create database (Free, region **us-east-1**) → REST API | Strongly recommended (without it, limits are per function instance) |
+| `PSI_API_KEY` | <https://console.cloud.google.com> → new project → enable **PageSpeed Insights API** → Credentials → API key (restrict it to that API). No billing account needed. | Recommended (without it, performance is an estimate) |
+| `GEMINI_API_KEY` | <https://aistudio.google.com> → Get API key | Recommended |
+| `GROQ_API_KEY` | <https://console.groq.com> → API Keys | Recommended |
+| `HF_TOKEN` | <https://huggingface.co/settings/tokens> (fine-grained, "Make calls to Inference Providers") | Optional |
+| `OPENROUTER_API_KEY` | <https://openrouter.ai> → Keys (only `:free` models are used) | Optional |
+| `TURNSTILE_SECRET` | Cloudflare Turnstile | Optional |
 
-   | Name | Value | Required |
-   |---|---|---|
-   | `ALLOWED_ORIGINS` | Your website URL(s), comma-separated, exact, no trailing slash | Yes |
-   | `GEMINI_API_KEY` | Google AI Studio key | Recommended |
-   | `GROQ_API_KEY` | Groq key | Recommended |
-   | `HF_TOKEN` | Fine-grained token with "Make calls to Inference Providers" | Optional |
-   | `OPENROUTER_API_KEY` | OpenRouter key (only `:free` models are used) | Optional |
-   | `PSI_API_KEY` | PageSpeed Insights key | Optional |
-   | `TURNSTILE_SECRET` | Cloudflare Turnstile secret | Optional |
+With no AI key at all, every report still has complete fixes from the built-in templates.
 
-   Any other setting in `.env.example` (limits, models, `CONTACT_URL`) can be added as a plain **variable**.
-5. Push to `main` (or run the **Deploy scanner** workflow by hand). The workflow runs `scripts/build-space.sh`, force-pushes the flattened folder to the Space and waits for `/health`.
-6. Check it: `pnpm health https://<user>-teardown-scanner.hf.space`.
+## 2. Create the Vercel project
 
-What the Space build does: `Dockerfile` (from `apps/scanner/Dockerfile`) starts from the official `mcr.microsoft.com/playwright:v1.63.0-noble` image (Chromium and fonts preinstalled), installs the scanner's dependencies with pnpm, bundles it with esbuild and runs `node apps/scanner/dist/main.js` as UID 1000 on port 7860. Secrets are runtime environment variables and never part of the image. Free Spaces sleep when idle; the website shows "Starting the scanner" while one wakes.
+1. <https://vercel.com/signup> → Continue with GitHub (Hobby).
+2. **Add New → Project** → import the repository.
+3. **Root Directory:** `apps/web`. Keep "Include files outside the root directory" on (the app imports `apps/scanner` and `packages/core`). Framework, build and install commands: defaults.
+4. **Environment Variables:** add the keys from section 1, plus `CONTACT_URL` (shown in the TeardownBot user agent). Leave `NEXT_PUBLIC_SCANNER_URL` unset: the site calls its own `/api`.
+5. **Deploy.**
+6. Settings → Functions: keep the region at **Washington, D.C. (iad1)** so it sits next to Upstash us-east-1.
+7. Optional: Settings → Domains for a custom domain. Update `apps/web/public/robots.txt` and `sitemap.xml` with the final domain, and set `NEXT_PUBLIC_SITE_URL`.
 
-Outbound traffic from a Space is limited to ports 80, 443 and 8080. Teardown only ever scans ports 80 and 443 anyway.
+Vercel builds on every push to `main`; pull requests get preview deployments.
 
-## 2. Website on Vercel (or any static host)
+### What runs where
 
-1. Import the GitHub repo in Vercel. **Root Directory**: `apps/web`. Allow files outside the root directory (the app imports `packages/core`).
-2. Environment variables:
-   - `NEXT_PUBLIC_SCANNER_URL` = your Space URL, e.g. `https://<user>-teardown-scanner.hf.space`;
-   - `NEXT_PUBLIC_SITE_URL` = the site's own URL (canonical and Open Graph links).
-3. Deploy. Vercel detects Next.js and serves the static export from `out/`.
-4. Copy the site URL into the Space's `ALLOWED_ORIGINS` secret and restart the Space.
+| Route | Runtime | Limits |
+|---|---|---|
+| `/`, `/sample`, `/privacy` | Static (CDN) | — |
+| `GET /api/health`, `GET /api/quota` | Function | — |
+| `POST /api/scan/stream` | Function, `maxDuration = 300` | One scan per call; the scanner stops itself at 270 s (`SCAN_DEADLINE_MS`) |
+| `POST /api/export/pdf` | Function, `maxDuration = 60` | Report body ≤ 4 MB |
 
-The app uses no Vercel-specific APIs. To move hosts, run `pnpm --filter @teardown/web build` and upload `apps/web/out/` to Cloudflare Pages, Netlify or GitHub Pages.
+On Vercel (detected via the `VERCEL` variable) the scanner applies serverless defaults, each overridable by setting the variable: `SITE_MAX_PAGES=5`, `SITE_CONCURRENCY=1`, `SITE_BUDGET_MS=150000`, `PERF_MAX_PAGES_FULL=0`, `MAX_CONCURRENT_SCANS=3`, `REPORT_MAX_BYTES=4000000`, `AI_TIMEOUT_MS=20000`, `AI_TOTAL_BUDGET_MS=45000`, `SCAN_DEADLINE_MS=270000`, `LIGHTHOUSE_ENABLED=false`.
 
-> **Vercel Hobby terms** (checked 2026-10-04): Hobby is for non-commercial personal use, and "commercial" includes a consultant earning from the site. A lead-generation tool for freelance work may count. Cloudflare Pages and Netlify have free tiers without that clause.
+Chromium comes from `@sparticuz/chromium` (x64 Linux, unpacked to `/tmp` on cold start). Lighthouse isn't shipped in the function; performance comes from PageSpeed Insights, or the documented estimate if there's no key.
 
-Update `apps/web/public/robots.txt` and `sitemap.xml` with your real domain.
+### Free-tier budget
 
-## 3. Smoke test (manual)
+Vercel Hobby includes about 4 hours of active CPU a month. A single-page scan uses roughly 15–40 s of CPU (performance runs on Google's side via PSI), so expect a few hundred scans a month. The per-IP and global daily limits (`SINGLE_PER_DAY`, `GLOBAL_SINGLE_PER_DAY`, …) keep usage inside that; lower `GLOBAL_SINGLE_PER_DAY` if you get close.
 
-After both are live:
+> **Vercel Hobby terms** (checked 2026-10-04): Hobby is for non-commercial personal use, and "commercial" includes a consultant earning from the site. A portfolio demo is fine; a lead-generation tool may not be.
 
-1. `pnpm health https://<user>-teardown-scanner.hf.space`: health, quota, and three refused private targets.
-2. Open the site: the landing page loads, the sample teardown plays once, "N scans left this hour" appears.
-3. Scan a site you own (single page): the bench log streams steps; the sheet shows pins, the brand sheet and fixes; the performance readout names its source.
-4. Download the PDF, Markdown brief and JSON. Paste the brief into an AI coding agent and confirm it can work through T1.
-5. Run a full-site scan of a small site: pages stream in the log, the report says how many pages were scanned.
-6. Try `http://localhost`, `http://127.0.0.1` and `http://192.168.1.1`: each is refused with a plain message.
+## 3. Smoke test
+
+After the first deploy (replace the URL):
+
+1. `pnpm health https://your-app.vercel.app`: health, quota, and three refused private targets.
+2. Open the site: the landing page loads, the sample teardown plays once, and the form shows "N scans left this hour" and the performance engine.
+3. Scan a site you own: the bench log streams steps; the sheet shows pins, the brand sheet and fixes; the performance readout says "PageSpeed Insights" (or "Estimate" without a key).
+4. Download the PDF, Markdown brief and JSON.
+5. Run a full-site scan of a small site: pages stream in, capped at 5.
+6. Try `http://localhost`, `http://127.0.0.1` and `http://192.168.1.1`: each is refused.
 7. Scan until the hourly limit: the message shows when you can scan again.
 
-## 4. Fallback host: Render (free web service, Docker)
+## 4. Local development
 
-If a Docker Space isn't available, the same container runs on Render's free web service:
+```bash
+pnpm install
+pnpm --filter @teardown/scanner exec playwright install chromium
+cp .env.example .env
+pnpm --filter @teardown/web dev        # site + API on http://localhost:3000
+```
 
-1. Run `scripts/build-space.sh` and push `.space-build/` to its own GitHub repo, or point Render at this repo with **Dockerfile path** `apps/scanner/Dockerfile` and a pre-build command that runs the script.
-2. Free instances have about 512 MB of RAM, which is tight for Chromium plus Lighthouse. Set `MAX_CONCURRENT_SCANS=1`, `SITE_CONCURRENCY=1`, and `PERF_ENGINE=psi` (with a key) or `PERF_ENGINE=estimate`.
-3. Render sets `PORT` itself; the scanner reads it. Set `TRUST_PROXY_HOPS=1`.
+The dev server uses Playwright's Chromium (not the serverless build) and in-memory limits unless the Upstash variables are set.
 
-## 5. AI defaults
+## 5. Alternative: the Docker scanner
 
-Run `pnpm ai:eval` locally with your keys in `.env`. It reports JSON validity, invalid-id rate, length violations and median latency per model. Put the best model first in each `*_MODELS` variable and record the results in `docs/DECISIONS.md`.
+The scanner also runs as a long-lived Fastify server in Docker, with a queue, SSE replay, local Lighthouse and the full 15-page site mode. Use it on any container host or VM:
+
+```bash
+bash scripts/build-space.sh .space-build    # flattened build context
+docker build -t teardown-scanner .space-build
+docker run -p 7860:7860 -e ALLOWED_ORIGINS=https://your-site.example -e GEMINI_API_KEY=... teardown-scanner
+```
+
+Then build the website with `NEXT_PUBLIC_SCANNER_URL=https://your-scanner.example`; it speaks the same `POST /api/scan/stream` protocol to either backend. The image is based on `mcr.microsoft.com/playwright:v1.63.0-noble`, runs as UID 1000 on port 7860 (HuggingFace Docker Spaces compatible; `.github/workflows/deploy-scanner.yml` deploys there when `HF_SPACE` is set), and needs about 2 GB of RAM for comfortable Lighthouse runs.

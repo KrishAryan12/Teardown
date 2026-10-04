@@ -6,26 +6,29 @@
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
-    "start": "node scripts/serve.mjs",
+    "start": "next start -p 3000",
     "typecheck": "next typegen && tsc -p tsconfig.json",
     "test": "echo web: covered by core and scanner tests",
     "test:a11y": "node scripts/a11y.mjs",
-    "lhci": "node scripts/mock-scanner.mjs && lhci autorun --config=lighthouserc.cjs",
-    "build:ci": "next build"
+    "lhci": "lhci autorun --config=lighthouserc.cjs"
   },
   "dependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@sparticuz/chromium": "^153.0.0",
     "@teardown/core": "workspace:*",
+    "@teardown/scanner": "workspace:*",
+    "linkedom": "^0.18.13",
     "next": "^16.3.8",
+    "playwright": "^1.63.0",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.13.0",
     "@lhci/cli": "^0.15.1",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "playwright": "^1.63.0",
     "typescript": "~6.0.3"
   }
 }

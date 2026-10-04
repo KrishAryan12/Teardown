@@ -115,6 +115,26 @@ describe('API', () => {
     expect((events.find((e) => e.type === 'report')!.data as { report: Report }).report.schema).toBe('teardown.report/v1');
   });
 
+  it('POST /api/scan/stream admits and streams the scan in one response (serverless-compatible protocol)', async () => {
+    const { app } = await server();
+    await app.listen({ port: 0, host: '127.0.0.1' });
+    const { port } = app.server.address() as AddressInfo;
+    const res = await fetch(`http://127.0.0.1:${port}/api/scan/stream`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', origin: 'https://teardown.example' },
+      body: JSON.stringify({ url: 'example.com' }),
+    });
+    expect(res.headers.get('content-type')).toMatch(/text\/event-stream/);
+    expect(res.headers.get('x-ratelimit-remaining')).toBe('4');
+    const types = (await res.text())
+      .split('\n\n')
+      .filter((b) => b.startsWith('event:'))
+      .map((b) => b.split('\n')[0]!.slice(7));
+    expect(types[0]).toBe('started');
+    expect(types).toEqual(expect.arrayContaining(['report', 'done']));
+    expect((await (await fetch(`http://127.0.0.1:${port}/api/health`)).json()).ok).toBe(true);
+  });
+
   it('replays only events after Last-Event-ID', async () => {
     const { app } = await server();
     const id = (await post(app, { url: 'example.com' })).json().scanId;

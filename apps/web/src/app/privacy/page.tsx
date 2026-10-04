@@ -4,7 +4,7 @@ import { Frame, SiteFooter, SiteHeader } from '@/components/Chrome';
 export const metadata: Metadata = {
   title: 'Privacy and AI use',
   description: 'What Teardown stores (nothing), what it logs, and which third parties process scan data.',
-  alternates: { canonical: '/privacy/' },
+  alternates: { canonical: '/privacy' },
 };
 
 export default function Privacy() {
