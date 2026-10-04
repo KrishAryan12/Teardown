@@ -25,7 +25,8 @@ export async function captureStatic(url: string, guard: SsrfGuard, cfg: Config):
   const { window, document } = parseHTML(html);
   const location = new URL(res.url);
   // Our own collector source (not page content) evaluated with a fake browser global scope.
-  const collect = new Function('window', 'document', 'location', `return ${inpageSource('collect')}`)(window, document, location) as (o: unknown) => {
+  // Parenthesised: the source starts with a comment, and a bare `return` + newline would return undefined.
+  const collect = new Function('window', 'document', 'location', `return (${inpageSource('collect')});`)(window, document, location) as (o: unknown) => {
     facts: PageFacts;
   };
   const { facts } = collect({ noLayout: true, url: res.url, brand: false });
