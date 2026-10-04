@@ -65,3 +65,7 @@ HF now documents Docker Spaces as needing PRO to create. Some existing free acco
 **D-21. Sample report.** Generated from a purpose-built demo shop page (`fixtures/pages/sample/`) through the full pipeline, with the local origin rewritten to `kilnandco.example`. Findings that only exist because the fixture is served locally (no HTTPS/HSTS, made-up shop links returning 404) are removed and scores recomputed.
 
 **D-22. Pins never overlap.** Pins are 26px buttons; when two land within 28px they fan out sideways (then down). This keeps them WCAG 2.5.8-compliant targets and tappable on phones. Hover and focus never scroll the page; only opening a task from a pin does.
+
+**D-23. Deployment is prepared and verified as far as possible without accounts.** `scripts/build-space.sh` assembles the Space folder (Dockerfile on `mcr.microsoft.com/playwright:v1.63.0-noble`, UID 1000, port 7860, README front matter `sdk: docker` / `app_port: 7860`). Docker isn't installed on the development machine, so the image itself was not built locally. Instead the Dockerfile's steps were replayed on the flattened folder: the frozen `pnpm install --filter "@teardown/scanner..."` succeeded, the esbuild bundle built, and the bundle started with `NODE_ENV=production`, refused private targets and scanned example.com end to end. The first real image build happens on the Space after `HF_DEPLOY_TOKEN` and `HF_SPACE` are set.
+
+**D-24. The web app ships `next typegen` before `tsc`** because `next-env.d.ts` imports generated route types that don't exist in a clean checkout.

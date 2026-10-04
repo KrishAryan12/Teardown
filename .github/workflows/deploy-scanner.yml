@@ -1,0 +1,55 @@
+name: Deploy scanner to HuggingFace Space
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/scanner/**
+      - packages/core/**
+      - pnpm-lock.yaml
+      - scripts/build-space.sh
+      - .github/workflows/deploy-scanner.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-scanner
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Needs repo secret HF_DEPLOY_TOKEN (write token) and repo variable HF_SPACE (user/space-name).
+    if: ${{ vars.HF_SPACE != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble the Space folder
+        run: bash scripts/build-space.sh .space-build
+      - name: Force-push to the Space repo
+        env:
+          HF_DEPLOY_TOKEN: ${{ secrets.HF_DEPLOY_TOKEN }}
+          HF_SPACE: ${{ vars.HF_SPACE }}
+        run: |
+          if [ -z "$HF_DEPLOY_TOKEN" ]; then echo "HF_DEPLOY_TOKEN secret is not set" >&2; exit 1; fi
+          cd .space-build
+          git init -q -b main
+          git config user.name "teardown-deploy"
+          git config user.email "deploy@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA::7} from GitHub"
+          HF_USER="${HF_SPACE%%/*}"
+          git push --force "https://${HF_USER}:${HF_DEPLOY_TOKEN}@huggingface.co/spaces/${HF_SPACE}" main
+      - name: Wait for the Space to report healthy
+        env:
+          HF_SPACE: ${{ vars.HF_SPACE }}
+        run: |
+          URL="https://$(echo "$HF_SPACE" | tr '/' '-' | tr '[:upper:]' '[:lower:]').hf.space/health"
+          for i in $(seq 1 40); do
+            if curl -fsS "$URL" > /dev/null; then echo "Healthy: $URL"; exit 0; fi
+            sleep 20
+          done
+          echo "The Space did not report healthy within ~13 minutes. Check its build logs." >&2
+          exit 1
