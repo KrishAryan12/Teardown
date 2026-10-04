@@ -114,7 +114,7 @@ export function axeToFindings(violations: AxeViolation[], pageUrl: string): { fi
       findings.push(
         toFinding(
           rule,
-          { selector: n.target, snippet: n.html, bbox: n.bbox ?? undefined, measured: n.measured, expected: n.expected, detail: n.failureSummary ? `${rule.detail} ${n.failureSummary.replace(/\s+/g, ' ')}`.slice(0, 1900) : undefined },
+          { selector: n.target, snippet: n.html, bbox: n.bbox ?? undefined, measured: n.measured, expected: n.expected, detail: n.failureSummary ? `${rule.detail.replace(/([^.])$/, '$1.')} ${n.failureSummary.replace(/\s+/g, ' ')}`.slice(0, 1900) : undefined },
           pageUrl,
           'axe',
           v.id,
