@@ -47,3 +47,21 @@ HF now documents Docker Spaces as needing PRO to create. Some existing free acco
 **D-12. AI defaults (pre-eval).** Gemini `gemini-3.5-flash-lite,gemini-3.1-flash-lite` with `reasoning_effort: none` (dropped automatically if rejected); Groq `llama-3.1-8b-instant`; HF `meta-llama/Llama-3.1-8B-Instruct:cheapest` (verified on the router at $0.02/$0.05 per M tokens); OpenRouter `google/gemma-4-26b-a4b-it:free,google/gemma-4-31b-it:free` (verified in the live :free list, both support response_format). **`pnpm ai:eval` has not been run yet: no provider keys are available locally.** Defaults must be confirmed from eval results once keys are added.
 
 **D-13. AI output hardening.** Unknown group ids are discarded, ranks renumbered, skipped groups appended deterministically, rationale capped at 20 words and instructions at ~50, off-site links and markup stripped. Invalid output gets one "valid JSON only" retry, then the chain advances. Circuit breaker: 429 = 30 min, 401/402/403/404/retired = 6 h, two invalid replies in a row = 30 min.
+
+**D-14. Limits storage.** Fixed-window counters aligned to UTC hours/days in memory behind a `RateStore` interface (Upstash can replace it). Counters reset on restart or sleep; accepted for v1. Refused requests never consume allowance (check everything, then increment). A cache hit is served without spending scan limits, PSI or AI budget; "Scan again now" (`fresh: true`) counts.
+
+**D-15. Client IP on HF Spaces.** HF's proxy forwards the client in `X-Forwarded-For`. Fastify trusts exactly `TRUST_PROXY_HOPS` (default 1) proxies, so a client-supplied `X-Forwarded-For` can't spoof the address used for rate limits. Set `TRUST_PROXY_HOPS=0` when running without a reverse proxy.
+
+**D-16. PDF rendering is sandboxed.** The PDF endpoint accepts a client-supplied report, so it is zod-validated, every string is HTML-escaped, image sources must be strict base64 data URLs, and the page renders with JavaScript disabled and every network request aborted. The cover is full-bleed via `@page :first { margin: 0 }`.
+
+**D-17. Fonts.** Google Fonts merged "Big Shoulders Display" into **Big Shoulders** (opsz 10–72), so the web app uses `Big_Shoulders` (optical size follows font size, giving the display cut at headline sizes). The PDF embeds the `@fontsource/big-shoulders-display` files, which are the same design. Big Shoulders and Public Sans use `display: optional` (no late swap of the LCP text; Big Shoulders has no metric-matched fallback); Martian Mono is not preloaded.
+
+**D-18. Landing JS budget.** 138 KB gzipped for modern browsers (the 39 KB `nomodule` polyfill chunk is never fetched by them). The report UI, bench log and sample teaser are code-split. The web app imports only zod-free subpaths of `@teardown/core` (`/scoring`, `/exporters`, `/tokens`).
+
+**D-19. CI runs the web checks against a static mock scanner** (`NEXT_PUBLIC_SCANNER_URL=/__mock` plus `scripts/mock-scanner.mjs`), so the warm-up ping succeeds and Lighthouse doesn't penalise console errors from a missing backend. Lighthouse CI asserts 95+ on the median of 5 mobile runs.
+
+**D-20. Local Lighthouse numbers are noisy on the development machine** (OneDrive syncing the repo and other background load put the CPU at ~64%). Same-build runs ranged 0.83–0.95 for performance; accessibility, best practices and SEO were 100. Performance is judged on the clean CI runner. Changes made for it: deferred layout of below-the-fold sections (`content-visibility`), idle-time warm-up ping, lazy bench log, no mono font preload.
+
+**D-21. Sample report.** Generated from a purpose-built demo shop page (`fixtures/pages/sample/`) through the full pipeline, with the local origin rewritten to `kilnandco.example`. Findings that only exist because the fixture is served locally (no HTTPS/HSTS, made-up shop links returning 404) are removed and scores recomputed.
+
+**D-22. Pins never overlap.** Pins are 26px buttons; when two land within 28px they fan out sideways (then down). This keeps them WCAG 2.5.8-compliant targets and tappable on phones. Hover and focus never scroll the page; only opening a task from a pin does.

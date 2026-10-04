@@ -5,7 +5,12 @@
   "type": "module",
   "description": "Teardown data contracts (zod), scoring and exporters. Pure functions, no I/O.",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./scoring": "./src/scoring.ts",
+    "./exporters": "./src/exporters.ts",
+    "./tokens": "./src/tokens.ts",
+    "./color": "./src/color.ts",
+    "./types": "./src/schema.ts"
   },
   "scripts": {
     "build": "echo core is consumed as source",
@@ -18,5 +23,9 @@
   "devDependencies": {
     "typescript": "~6.0.3",
     "vitest": "^5.0.3"
-  }
+  },
+  "sideEffects": [
+    "./src/schema.ts",
+    "./src/index.ts"
+  ]
 }

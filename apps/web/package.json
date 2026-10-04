@@ -1,0 +1,31 @@
+{
+  "name": "@teardown/web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "node scripts/serve.mjs",
+    "typecheck": "next typegen && tsc -p tsconfig.json",
+    "test": "echo web: covered by core and scanner tests",
+    "test:a11y": "node scripts/a11y.mjs",
+    "lhci": "node scripts/mock-scanner.mjs && lhci autorun --config=lighthouserc.cjs",
+    "build:ci": "next build"
+  },
+  "dependencies": {
+    "@teardown/core": "workspace:*",
+    "next": "^16.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@lhci/cli": "^0.15.1",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "playwright": "^1.63.0",
+    "typescript": "~6.0.3"
+  }
+}
