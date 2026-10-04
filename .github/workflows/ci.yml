@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - name: Install Chromium for integration tests
+        run: pnpm --filter @teardown/scanner exec playwright install --with-deps chromium
+      - name: Integration tests (SSRF proxy, full fixture scan, exports)
+        run: pnpm test:integration
+        env:
+          ALLOW_PRIVATE_TARGETS: 'true'
+          NODE_ENV: test
+
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @teardown/web build
+        env:
+          NEXT_PUBLIC_SCANNER_URL: https://scanner.invalid
+      - name: Install Chromium
+        run: pnpm --filter @teardown/scanner exec playwright install --with-deps chromium
+      - name: Axe check on the landing and sample report
+        run: pnpm --filter @teardown/web test:a11y
+      - name: Lighthouse CI (landing page, 95+ in all categories)
+        run: pnpm --filter @teardown/web lhci

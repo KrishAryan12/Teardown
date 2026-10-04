@@ -1,0 +1,22 @@
+{
+  "name": "@teardown/core",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Teardown data contracts (zod), scoring and exporters. Pure functions, no I/O.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "echo core is consumed as source",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.3"
+  }
+}

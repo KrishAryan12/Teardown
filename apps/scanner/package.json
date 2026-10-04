@@ -1,0 +1,42 @@
+{
+  "name": "@teardown/scanner",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Teardown scanner: Fastify API, Playwright capture, rules, Lighthouse, AI chain, PDF.",
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=../../.env src/main.ts",
+    "start": "node dist/main.js",
+    "build": "node build.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "ai:eval": "tsx --env-file-if-exists=../../.env scripts/ai-eval.ts",
+    "sample:generate": "tsx scripts/sample-generate.ts"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@fastify/cors": "^11.3.0",
+    "@fontsource/big-shoulders-display": "^5.3.0",
+    "@fontsource/martian-mono": "^5.3.0",
+    "@fontsource/public-sans": "^5.3.0",
+    "@teardown/core": "workspace:*",
+    "chrome-launcher": "^1.2.2",
+    "fast-xml-parser": "^5.11.2",
+    "fastify": "^5.12.5",
+    "ipaddr.js": "^2.5.0",
+    "lighthouse": "^13.5.0",
+    "linkedom": "^0.18.13",
+    "lru-cache": "^11.5.3",
+    "playwright": "^1.63.0",
+    "robots-parser": "^3.0.1",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.3"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "teardown",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Paste a URL, get a forensic teardown: performance, SEO, accessibility, UX, brand system and a prioritised fix list.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@12.9.1",
+  "engines": {
+    "node": ">=22.19"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @teardown/scanner --filter @teardown/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "test": "pnpm -r test",
+    "test:integration": "pnpm --filter @teardown/scanner test:integration",
+    "ai:eval": "pnpm --filter @teardown/scanner ai:eval",
+    "sample:generate": "pnpm --filter @teardown/scanner sample:generate",
+    "health": "node scripts/health.mjs",
+    "check": "pnpm typecheck && pnpm lint && pnpm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.4",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
+  }
+}

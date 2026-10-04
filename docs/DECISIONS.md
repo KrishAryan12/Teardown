@@ -1,0 +1,35 @@
+# Decisions log
+
+One entry per decision: what, why, and the alternative considered. Verified facts carry the date they were checked.
+Newest entries are appended at the end of each section.
+
+## Verified external facts (checked 2026-10-04)
+
+| Topic | What the official docs say today | Consequence for Teardown |
+|---|---|---|
+| **HF Spaces, Docker SDK** | `sdk: docker` + `app_port` in README front matter; container runs as UID 1000; secrets are runtime env vars; CPU Basic = 2 vCPU / 16 GB / 50 GB ephemeral disk; outbound traffic allowed on ports **80, 443 and 8080 only**; free hardware sleeps when unused. **New:** the Spaces overview now says *"Gradio and Docker Spaces run on compute and require a paid plan to create: PRO for personal accounts"*. Static Spaces stay free. | This conflicts with the zero-spend rule. See decision D-01. |
+| **HF Inference Providers** | OpenAI-compatible router at `https://router.huggingface.co/v1/chat/completions`. Model id suffixes: `:fastest` (default), `:cheapest`, `:preferred`, or a provider name such as `:novita`. Free users get **$0.10/month** of credit ("subject to change"); more needs purchased credit. | Third in the chain, own daily cap (`AI_DAILY_CALLS_HUGGINGFACE`, default 20). Default model `meta-llama/Llama-3.1-8B-Instruct:cheapest`. |
+| **Gemini (AI Studio)** | Rate-limit page no longer publishes free-tier numbers; it points to the per-project AI Studio dashboard. Current stable ids include `gemini-3.8-flash`, `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`. `gemini-2.0-flash(-lite)` and `gemini-3.1-flash-lite-preview` are **shut down**. OpenAI-compatible endpoint: `https://generativelanguage.googleapis.com/v1beta/openai/`, supports `reasoning_effort` (`none` disables thinking on models that allow it). | Default `GEMINI_MODELS=gemini-3.5-flash-lite,gemini-3.1-flash-lite`. We send `reasoning_effort: "none"` and retry without it if the model rejects the parameter. Daily cap is conservative (default 200) because the free numbers are not published. |
+| **Groq** | Rate-limit docs show a summary table and point to the per-org Limits page. `llama-3.1-8b-instant` is a production model. JSON Object mode works on all models; strict `json_schema` only on gpt-oss and qwen. | Default `GROQ_MODELS=llama-3.1-8b-instant`, `response_format: json_object`. One report call is ~4.5k tokens, so we keep one call per scan. Default daily cap 300. |
+| **OpenRouter** | `:free` models: 20 requests/minute, **50/day** without purchased credit (1000/day after buying $10). | Last resort; `AI_DAILY_CALLS_OPENROUTER` default 40. |
+| **PageSpeed Insights API** | `https://www.googleapis.com/pagespeedonline/v5/runPagespeed`, key recommended. The getting-started page no longer prints the quota; the commonly cited figure is 25,000/day per project. | Optional engine. `PSI_DAILY_CAP` default 500, far below any plausible quota. |
+| **Vercel Hobby** | Fair-use page (updated 2026-09-14): Hobby is for **non-commercial personal use**; commercial means financial gain for anyone involved, *including a consultant writing the code*; "advertising the sale of a product or service" is listed. | A lead-gen tool for a freelancer could count as commercial. The frontend is a plain static export with no Vercel APIs, so it can move to Cloudflare Pages/Netlify/GitHub Pages unchanged. Flagged to the owner. |
+| **Lighthouse** | Node API `lighthouse(url, flags, config)`; with `flags.port` it attaches to an existing Chrome with remote debugging. Requires Node >= 22.19. | We launch Playwright's Chromium via `chrome-launcher` (`chromePath = chromium.executablePath()`) with the proxy flags, then pass its port. |
+| **Package versions** | Checked with `npm view` on 2026-10-04: playwright 1.63.0, lighthouse 13.5.0, next 16.3.8, react 19.3.0, fastify 5.12.5, zod 4.6.5, vitest 5.0.3, eslint 10.12.0, typescript-eslint 8.71.0, sharp 0.35.5, pnpm 12.9.1. | Ranges pinned to those majors. |
+| **TypeScript** | `latest` is 7.0.2 (the native port) which ships no classic compiler API; typescript-eslint 8.71 supports `>=4.8.4 <6.1.0`. | Pinned `typescript ~6.0.3`. Revisit when typescript-eslint supports 7. |
+| **pnpm 12** | `onlyBuiltDependencies` is replaced by `allowBuilds` (map of package -> boolean); unreviewed builds fail installs by default. | `pnpm-workspace.yaml` uses `allowBuilds`. |
+
+## Decisions
+
+**D-01. Scanner hosting: keep HF Spaces as the documented target, keep the container portable.**
+HF now documents Docker Spaces as needing PRO to create. Some existing free accounts can still create them and the policy may differ by account, so the deploy path from the brief stays (`scripts/build-space.sh`, `deploy-scanner.yml`). The container listens on `$PORT` (default 7860), so the same image runs on any free container host. `docs/DEPLOY.md` lists a fallback (Render free web service via its Docker runtime: 512 MB RAM is tight for Chromium, so run with `MAX_CONCURRENT_SCANS=1` and `PERF_ENGINE=estimate` or `psi`). *Alternative:* switching the brief's target outright; rejected because the owner chose HF and may be able to use it.
+
+**D-02. Monorepo tooling.** pnpm workspaces, TypeScript everywhere, ESM. `packages/core` is consumed as TypeScript source (no build step) by vitest, Next (`transpilePackages`) and esbuild. *Alternative:* building core to `dist` with project references; more moving parts for no benefit.
+
+**D-03. Scanner build.** esbuild bundles `apps/scanner/src/main.ts` (with `@teardown/core` inlined) to `dist/main.js`; runtime dependencies stay external and are installed in the image. Code that runs inside scanned pages lives as plain JS files in `apps/scanner/inpage/`, read at runtime, because bundler/tsx helpers (`__name`) break functions passed to `page.evaluate`. *Alternative:* running `tsx` in production; slower boot and the same evaluate problem.
+
+**D-04. Schema additions beyond the brief (all additive, still `teardown.report/v1`).** `Finding.evidence.ref` (axe rule id / Lighthouse audit id), `Finding.fix.verify`, `Page.screenshotSize`, `Page.ruleCounts`, `Page.scores`, `Page.metrics`, `Group.category`, `Group.title`, `BrandProfile.typeScaleRatio`, `BrandProfile.contrastUnknown`, `BrandProfile.fonts[].rendered`, `Report.reducedAccuracy`, `Report.limits.screenshotsDropped/notes`, `Report.lighthouse.metrics`. They make the UI and exports self-contained without recomputation.
+
+**D-05. Markdown hardening.** All page-derived text in the agent brief is flattened to one line, Markdown-escaped, and selectors are placed in backtick-safe code spans. The brief tells the agent that quoted page text is data, not instructions.
+
+**D-06. Rules run on serialisable page facts.** One in-page script collects a `PageFacts` object; rules are pure functions of it. Rules are unit-testable without a browser, and the Chromium-down fallback fills the same `PageFacts` from static HTML (linkedom) with layout fields empty.

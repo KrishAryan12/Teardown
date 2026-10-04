@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.space-build/
+.lighthouseci/
+test-results/
+playwright-report/
+*.log
+
+# Internal owner docs, never published
+PROMPT.md
+SETUP.md
