@@ -12,6 +12,7 @@ export default tseslint.config(
       '**/coverage/**',
       '.space-build/**',
       'apps/web/next-env.d.ts',
+      'fixtures/**',
     ],
   },
   js.configs.recommended,
@@ -29,6 +30,12 @@ export default tseslint.config(
     // Scripts injected into scanned pages run in the browser.
     files: ['apps/scanner/inpage/**/*.js'],
     languageOptions: { globals: { ...globals.browser }, sourceType: 'script' },
+    rules: {
+      // Each file is a single function expression evaluated by Playwright, written in ES5-style JS.
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { caughtErrors: 'none' }],
+      'no-redeclare': 'off',
+    },
   },
   {
     files: ['apps/web/**/*.{ts,tsx}'],

@@ -1,0 +1,1966 @@
+{
+ "requestedUrl": "https://fixture.test/bad.html",
+ "finalUrl": "https://fixture.test/bad.html",
+ "status": 200,
+ "headers": {
+  "connection": "keep-alive",
+  "keep-alive": "timeout=5",
+  "transfer-encoding": "chunked",
+  "cache-control": "no-cache",
+  "content-type": "text/html; charset=utf-8",
+  "date": "Sun, 04 Oct 2026 14:52:52 GMT"
+ },
+ "redirects": [],
+ "rawHtml": "<!-- Intentionally terrible page for Teardown tests. Every flaw here is deliberate. -->\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>Hi</title>\n<meta name=\"generator\" content=\"SiteBuilder 3.2.1\">\n<link rel=\"stylesheet\" href=\"assets/bad.css\">\n<script src=\"assets/blocking.js\"></script>\n<style>\n  body { margin: 0; background: #ffffff; font-family: \"Comic Sans MS\", cursive; font-size: 13px; }\n  .hero { background: #f4f4f4; padding: 13px 19px; margin: 7px; }\n  .faint { color: #b5b5b5; }\n  .faint2 { color: #a9a9a9; background: #ffffff; }\n  .card { margin: 11px 5px 23px; padding: 9px 17px; border-radius: 3px; border: 1px solid #dddddd; box-shadow: 0 2px 3px rgba(0,0,0,.2); }\n  .card2 { margin: 21px; padding: 15px; border-radius: 7px; border: 1px solid #dedede; box-shadow: 1px 1px 9px rgba(0,0,0,.4); }\n  .card3 { padding: 27px 3px; border-radius: 12px; border: 2px solid #e0e0e0; }\n  .serif { font-family: Georgia, serif; }\n  .mono { font-family: \"Courier New\", monospace; }\n  .verdana { font-family: Verdana, sans-serif; }\n  .impact { font-family: Impact, fantasy; }\n  .blue1 { color: #1a5fb4; } .blue2 { color: #1c62b8; } .blue3 { color: #1f66bd; } .blue4 { color: #2369c0; }\n  .red1 { background: #e01b24; color: #fff; } .red2 { background: #e2222b; color: #fff; }\n  .wide { width: 1900px; }\n  .tiny a { font-size: 10px; display: inline-block; padding: 1px; }\n  a:focus { outline: none; }\n  button:focus { outline: none; }\n  .btn-a { background: #e01b24; color: #ffffff; padding: 9px 15px; border-radius: 4px; border: 0; font-size: 14px; }\n  .btn-b { background: #1a5fb4; color: #ffffff; padding: 6px 11px; border-radius: 0; border: 0; font-size: 12px; }\n  .btn-c { background: #33d17a; color: #ffffff; padding: 13px 27px; border-radius: 20px; border: 0; font-size: 17px; }\n  .overlay { position: fixed; inset: 0 0 20% 0; background: rgba(0,0,0,.6); color: #fff; z-index: 99; }\n  .overlay p { color: #fff; padding: 21px; }\n  .longtext { max-width: none; font-size: 15px; }\n</style>\n</head>\n<bod",
+ "title": "Hi",
+ "facts": {
+  "url": "https://fixture.test/bad.html",
+  "hasLayout": true,
+  "viewport": {
+   "w": 1440,
+   "h": 900
+  },
+  "doc": {
+   "w": 1900,
+   "h": 1208
+  },
+  "head": {
+   "title": "Hi",
+   "titleCount": 1,
+   "lang": null,
+   "metaDescription": null,
+   "metaRobots": null,
+   "viewport": null,
+   "charset": "utf-8",
+   "generator": "SiteBuilder 3.2.1",
+   "themeColor": null,
+   "canonical": null,
+   "canonicalCount": 0,
+   "og": {
+    "title": null,
+    "description": null,
+    "image": null,
+    "type": null,
+    "url": null
+   },
+   "twitter": {
+    "card": null,
+    "title": null,
+    "image": null
+   },
+   "jsonLd": [],
+   "hreflang": [],
+   "favicon": null
+  },
+  "headings": [
+   {
+    "level": 3,
+    "text": "Welcome to our website",
+    "selector": "body > div.hero:nth-of-type(2) > h3",
+    "visible": true,
+    "bbox": {
+     "x": 26,
+     "y": 35,
+     "w": 1388,
+     "h": 21
+    }
+   },
+   {
+    "level": 5,
+    "text": "Some subheading that skips levels",
+    "selector": "body > div.hero:nth-of-type(2) > h5",
+    "visible": true,
+    "bbox": {
+     "x": 26,
+     "y": 74,
+     "w": 1388,
+     "h": 15
+    }
+   },
+   {
+    "level": 2,
+    "text": "Our services",
+    "selector": "body > div.card.serif:nth-of-type(3) > h2",
+    "visible": true,
+    "bbox": {
+     "x": 23,
+     "y": 364,
+     "w": 1394,
+     "h": 22
+    }
+   }
+  ],
+  "images": [
+   {
+    "selector": "body > img:nth-of-type(1)",
+    "snippet": "<img src=\"assets/huge.png\" style=\"width:160px\">",
+    "src": "https://fixture.test/assets/huge.png",
+    "alt": null,
+    "role": null,
+    "ariaHidden": false,
+    "ariaLabel": null,
+    "inLink": false,
+    "hasDimensions": false,
+    "naturalW": 1600,
+    "naturalH": 1200,
+    "renderedW": 160,
+    "renderedH": 120,
+    "loading": null,
+    "bbox": {
+     "x": 0,
+     "y": 203,
+     "w": 160,
+     "h": 120
+    },
+    "aboveFold": true,
+    "visible": true
+   },
+   {
+    "selector": "body > img:nth-of-type(2)",
+    "snippet": "<img src=\"assets/huge.png\" width=\"160\" alt=\"\">",
+    "src": "https://fixture.test/assets/huge.png",
+    "alt": "",
+    "role": null,
+    "ariaHidden": false,
+    "ariaLabel": null,
+    "inLink": false,
+    "hasDimensions": false,
+    "naturalW": 1600,
+    "naturalH": 1200,
+    "renderedW": 160,
+    "renderedH": 120,
+    "loading": null,
+    "bbox": {
+     "x": 164,
+     "y": 203,
+     "w": 160,
+     "h": 120
+    },
+    "aboveFold": true,
+    "visible": true
+   },
+   {
+    "selector": "body > img:nth-of-type(3)",
+    "snippet": "<img src=\"assets/photo.png\" style=\"width:200px\">",
+    "src": "https://fixture.test/assets/photo.png",
+    "alt": null,
+    "role": null,
+    "ariaHidden": false,
+    "ariaLabel": null,
+    "inLink": false,
+    "hasDimensions": false,
+    "naturalW": 900,
+    "naturalH": 600,
+    "renderedW": 200,
+    "renderedH": 133,
+    "loading": null,
+    "bbox": {
+     "x": 328,
+     "y": 189,
+     "w": 200,
+     "h": 133
+    },
+    "aboveFold": true,
+    "visible": true
+   },
+   {
+    "selector": "body > img:nth-of-type(4)",
+    "snippet": "<img src=\"http://insecure.invalid/tracker.gif\" alt=\"tracker\" width=\"1\" height=\"1\">",
+    "src": "http://insecure.invalid/tracker.gif",
+    "alt": "tracker",
+    "role": null,
+    "ariaHidden": false,
+    "ariaLabel": null,
+    "inLink": false,
+    "hasDimensions": true,
+    "naturalW": 0,
+    "naturalH": 0,
+    "renderedW": 1,
+    "renderedH": 1,
+    "loading": null,
+    "bbox": {
+     "x": 71,
+     "y": 1203,
+     "w": 1,
+     "h": 1
+    },
+    "aboveFold": false,
+    "visible": true
+   }
+  ],
+  "imageCount": 4,
+  "links": [
+   {
+    "href": "https://fixture.test/services",
+    "rawHref": "/services",
+    "protocol": "http:",
+    "text": "click here",
+    "accessibleName": "click here",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > div.card.serif:nth-of-type(3) > p:nth-of-type(1) > a:nth-of-type(1)",
+    "snippet": "<a href=\"/services\">click here</a>",
+    "visible": true,
+    "bbox": {
+     "x": 256,
+     "y": 402,
+     "w": 55,
+     "h": 15
+    }
+   },
+   {
+    "href": "https://fixture.test/bad.html#",
+    "rawHref": "#",
+    "protocol": "http:",
+    "text": "read more",
+    "accessibleName": "read more",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > div.card.serif:nth-of-type(3) > p:nth-of-type(1) > a:nth-of-type(2)",
+    "snippet": "<a href=\"#\">read more</a>",
+    "visible": true,
+    "bbox": {
+     "x": 339,
+     "y": 402,
+     "w": 59,
+     "h": 15
+    }
+   },
+   {
+    "href": "https://fixture.test/signup",
+    "rawHref": "/signup",
+    "protocol": "http:",
+    "text": "Sign up",
+    "accessibleName": "Sign up",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > p:nth-of-type(2) > a.btn-a",
+    "snippet": "<a class=\"btn-a\" href=\"/signup\">Sign up</a>",
+    "visible": true,
+    "bbox": {
+     "x": 136,
+     "y": 921,
+     "w": 77,
+     "h": 37
+    }
+   },
+   {
+    "href": "https://fixture.test/a",
+    "rawHref": "/a",
+    "protocol": "http:",
+    "text": "A",
+    "accessibleName": "A",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > div.tiny:nth-of-type(7) > a:nth-of-type(1)",
+    "snippet": "<a href=\"/a\">A</a>",
+    "visible": true,
+    "bbox": {
+     "x": 0,
+     "y": 976,
+     "w": 9,
+     "h": 16
+    }
+   },
+   {
+    "href": "https://fixture.test/b",
+    "rawHref": "/b",
+    "protocol": "http:",
+    "text": "B",
+    "accessibleName": "B",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > div.tiny:nth-of-type(7) > a:nth-of-type(2)",
+    "snippet": "<a href=\"/b\">B</a>",
+    "visible": true,
+    "bbox": {
+     "x": 9,
+     "y": 976,
+     "w": 8,
+     "h": 16
+    }
+   },
+   {
+    "href": "https://fixture.test/c",
+    "rawHref": "/c",
+    "protocol": "http:",
+    "text": "C",
+    "accessibleName": "C",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > div.tiny:nth-of-type(7) > a:nth-of-type(3)",
+    "snippet": "<a href=\"/c\">C</a>",
+    "visible": true,
+    "bbox": {
+     "x": 18,
+     "y": 976,
+     "w": 8,
+     "h": 16
+    }
+   },
+   {
+    "href": "https://fixture.test/missing-page",
+    "rawHref": "/missing-page",
+    "protocol": "http:",
+    "text": "Broken link",
+    "accessibleName": "Broken link",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > a",
+    "snippet": "<a href=\"/missing-page\">Broken link</a>",
+    "visible": true,
+    "bbox": {
+     "x": 0,
+     "y": 1190,
+     "w": 67,
+     "h": 18
+    }
+   }
+  ],
+  "linkCount": 7,
+  "unlabeledControls": [
+   {
+    "selector": "body > form > input",
+    "snippet": "<input type=\"text\" placeholder=\"Your email\">",
+    "placeholder": "Your email",
+    "bbox": {
+     "x": 0,
+     "y": 877,
+     "w": 177,
+     "h": 21
+    }
+   },
+   {
+    "selector": "body > form > select",
+    "snippet": "<select><option>One</option></select>",
+    "placeholder": null,
+    "bbox": {
+     "x": 181,
+     "y": 878,
+     "w": 48,
+     "h": 19
+    }
+   }
+  ],
+  "landmarks": {
+   "main": 0,
+   "nav": 0,
+   "header": 0,
+   "footer": 0
+  },
+  "skipLink": {
+   "found": false
+  },
+  "focus": {
+   "tested": 8,
+   "invisible": [
+    {
+     "selector": "#cookie-wall > p > button.btn-b",
+     "snippet": "<button class=\"btn-b\">OK</button>",
+     "bbox": {
+      "x": 356,
+      "y": 34,
+      "w": 39,
+      "h": 26
+     }
+    },
+    {
+     "selector": "body > div.card.serif:nth-of-type(3) > p:nth-of-type(1) > a:nth-of-type(1)",
+     "snippet": "<a href=\"/services\">click here</a>",
+     "bbox": {
+      "x": 256,
+      "y": 402,
+      "w": 55,
+      "h": 15
+     }
+    },
+    {
+     "selector": "body > div.card.serif:nth-of-type(3) > p:nth-of-type(1) > a:nth-of-type(2)",
+     "snippet": "<a href=\"#\">read more</a>",
+     "bbox": {
+      "x": 339,
+      "y": 402,
+      "w": 59,
+      "h": 15
+     }
+    },
+    {
+     "selector": "body > form > button.btn-a",
+     "snippet": "<button class=\"btn-a\">Subscribe</button>",
+     "bbox": {
+      "x": 233,
+      "y": 870,
+      "w": 92,
+      "h": 34
+     }
+    },
+    {
+     "selector": "body > p:nth-of-type(2) > button.btn-b:nth-of-type(1)",
+     "snippet": "<button class=\"btn-b\">Buy</button>",
+     "bbox": {
+      "x": 0,
+      "y": 928,
+      "w": 43,
+      "h": 26
+     }
+    },
+    {
+     "selector": "body > p:nth-of-type(2) > button.btn-c:nth-of-type(2)",
+     "snippet": "<button class=\"btn-c\">Join</button>",
+     "bbox": {
+      "x": 47,
+      "y": 917,
+      "w": 85,
+      "h": 46
+     }
+    }
+   ]
+  },
+  "smallText": {
+   "chars": 885,
+   "totalChars": 885,
+   "samples": [
+    {
+     "selector": "#cookie-wall > p",
+     "px": 13,
+     "snippet": "<p>We use cookies. By continuing you agree to everything. <button class=\"btn-b\">OK</button></p>",
+     "bbox": {
+      "x": 0,
+      "y": 13,
+      "w": 1440,
+      "h": 68
+     }
+    },
+    {
+     "selector": "body > div.hero:nth-of-type(2) > p.faint:nth-of-type(1)",
+     "px": 13,
+     "snippet": "<p class=\"faint\">This text is very light grey on white and hard to read for most people. It fails WCAG contrast badly.</p>",
+     "bbox": {
+      "x": 26,
+      "y": 107,
+      "w": 1388,
+      "h": 18
+     }
+    },
+    {
+     "selector": "body > div.hero:nth-of-type(2) > p.faint2:nth-of-type(2)",
+     "px": 13,
+     "snippet": "<p class=\"faint2\">More faint text that keeps going so that it counts as real body copy for the contrast checker.</p>",
+     "bbox": {
+      "x": 26,
+      "y": 138,
+      "w": 1388,
+      "h": 18
+     }
+    },
+    {
+     "selector": "body > div.card.serif:nth-of-type(3) > p:nth-of-type(1)",
+     "px": 13,
+     "snippet": "<p>Serif text in a card with off-grid spacing. <a href=\"/services\">click here</a> and <a href=\"#\">read more</a>.</p>",
+     "bbox": {
+      "x": 23,
+      "y": 402,
+      "w": 1394,
+      "h": 15
+     }
+    },
+    {
+     "selector": "body > div.card.serif:nth-of-type(3) > p.blue2:nth-of-type(3)",
+     "px": 13,
+     "snippet": "<p class=\"blue2\">Blue two, almost the same.</p>",
+     "bbox": {
+      "x": 23,
+      "y": 458,
+      "w": 1394,
+      "h": 15
+     }
+    },
+    {
+     "selector": "body > div.card2.mono:nth-of-type(4) > p",
+     "px": 13,
+     "snippet": "<p>Monospaced paragraph for no reason at all, used as body copy here.</p>",
+     "bbox": {
+      "x": 37,
+      "y": 604,
+      "w": 1366,
+      "h": 15
+     }
+    },
+    {
+     "selector": "body > div.card3.verdana:nth-of-type(5) > p",
+     "px": 13,
+     "snippet": "<p>Verdana paragraph that also counts as a font family in use on this page.</p>",
+     "bbox": {
+      "x": 5,
+      "y": 711,
+      "w": 1430,
+      "h": 16
+     }
+    },
+    {
+     "selector": "body > div.impact:nth-of-type(6) > p",
+     "px": 13,
+     "snippet": "<p>Impact text, the fifth family.</p>",
+     "bbox": {
+      "x": 0,
+      "y": 782,
+      "w": 1440,
+      "h": 16
+     }
+    },
+    {
+     "selector": "body > p.longtext:nth-of-type(1)",
+     "px": 15,
+     "snippet": "<p class=\"longtext\">This paragraph is deliberately very wide with no max-width so that the line length is far longer than the comfortable reading measure of about sixty to seventy-five characters. It keeps going and going, sentence after sentence, so that each line on a desktop v",
+     "bbox": {
+      "x": 0,
+      "y": 813,
+      "w": 1440,
+      "h": 42
+     }
+    }
+   ]
+  },
+  "longLines": [
+   {
+    "selector": "body > p.longtext:nth-of-type(1)",
+    "cpl": 195,
+    "snippet": "<p class=\"longtext\">This paragraph is deliberately very wide with no max-width so that the line length is far longer than the comfortable reading measure of about sixty to seventy-five characters. It keeps going and going, sentence after sentence, so that each line on a desktop v",
+    "bbox": {
+     "x": 0,
+     "y": 813,
+     "w": 1440,
+     "h": 42
+    }
+   }
+  ],
+  "primaryAction": {
+   "checked": true,
+   "found": true,
+   "selector": "body > form > button.btn-a",
+   "text": "Subscribe"
+  },
+  "overlays": [
+   {
+    "selector": "#cookie-wall",
+    "coverage": 0.8,
+    "snippet": "<div class=\"overlay\" id=\"cookie-wall\"><p>We use cookies. By continuing you agree to everything. <button class=\"btn-b\">OK</button></p></div>",
+    "bbox": {
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 720
+    }
+   }
+  ],
+  "autoplay": [
+   {
+    "selector": "body > video",
+    "snippet": "<video src=\"assets/none.mp4\" autoplay=\"\"></video>",
+    "bbox": {
+     "x": 76,
+     "y": 1054,
+     "w": 300,
+     "h": 150
+    }
+   }
+  ],
+  "renderBlocking": [
+   {
+    "kind": "script",
+    "url": "https://fixture.test/assets/blocking.js"
+   },
+   {
+    "kind": "stylesheet",
+    "url": "https://fixture.test/assets/bad.css"
+   }
+  ],
+  "mixedContent": [],
+  "stackHints": [],
+  "domNodes": 54,
+  "textLength": 1115
+ },
+ "brand": {
+  "sampled": 44,
+  "colors": [
+   {
+    "kind": "bg",
+    "hex": "#ffffff",
+    "interactive": false,
+    "weight": 1764.504,
+    "count": 2,
+    "key": "bg|#ffffff|0"
+   },
+   {
+    "kind": "bg",
+    "hex": "#000000",
+    "interactive": false,
+    "weight": 1036.8,
+    "count": 1,
+    "key": "bg|#000000|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#ffffff",
+    "interactive": false,
+    "weight": 102,
+    "count": 3,
+    "key": "text|#ffffff|0"
+   },
+   {
+    "kind": "bg",
+    "hex": "#1a5fb4",
+    "interactive": true,
+    "weight": 2.1328125,
+    "count": 2,
+    "key": "bg|#1a5fb4|1"
+   },
+   {
+    "kind": "text",
+    "hex": "#ffffff",
+    "interactive": true,
+    "weight": 25,
+    "count": 5,
+    "key": "text|#ffffff|1"
+   },
+   {
+    "kind": "bg",
+    "hex": "#f4f4f4",
+    "interactive": false,
+    "weight": 249.88421875,
+    "count": 1,
+    "key": "bg|#f4f4f4|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#000000",
+    "interactive": false,
+    "weight": 677,
+    "count": 8,
+    "key": "text|#000000|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#b5b5b5",
+    "interactive": false,
+    "weight": 101,
+    "count": 1,
+    "key": "text|#b5b5b5|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#a9a9a9",
+    "interactive": false,
+    "weight": 94,
+    "count": 1,
+    "key": "text|#a9a9a9|0"
+   },
+   {
+    "kind": "border",
+    "hex": "#dddddd",
+    "interactive": false,
+    "weight": 16.4434375,
+    "count": 1,
+    "key": "border|#dddddd|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#0000ee",
+    "interactive": true,
+    "weight": 33,
+    "count": 6,
+    "key": "text|#0000ee|1"
+   },
+   {
+    "kind": "text",
+    "hex": "#1a5fb4",
+    "interactive": false,
+    "weight": 9,
+    "count": 1,
+    "key": "text|#1a5fb4|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#1c62b8",
+    "interactive": false,
+    "weight": 26,
+    "count": 1,
+    "key": "text|#1c62b8|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#1f66bd",
+    "interactive": false,
+    "weight": 11,
+    "count": 1,
+    "key": "text|#1f66bd|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#2369c0",
+    "interactive": false,
+    "weight": 10,
+    "count": 1,
+    "key": "text|#2369c0|0"
+   },
+   {
+    "kind": "border",
+    "hex": "#dedede",
+    "interactive": false,
+    "weight": 14.71,
+    "count": 1,
+    "key": "border|#dedede|0"
+   },
+   {
+    "kind": "border",
+    "hex": "#e0e0e0",
+    "interactive": false,
+    "weight": 15.4,
+    "count": 1,
+    "key": "border|#e0e0e0|0"
+   },
+   {
+    "kind": "bg",
+    "hex": "#ffffff",
+    "interactive": true,
+    "weight": 4.6290000000000004,
+    "count": 2,
+    "key": "bg|#ffffff|1"
+   },
+   {
+    "kind": "border",
+    "hex": "#767676",
+    "interactive": true,
+    "weight": 2.65,
+    "count": 2,
+    "key": "border|#767676|1"
+   },
+   {
+    "kind": "bg",
+    "hex": "#e01b24",
+    "interactive": true,
+    "weight": 5.99875,
+    "count": 2,
+    "key": "bg|#e01b24|1"
+   },
+   {
+    "kind": "bg",
+    "hex": "#33d17a",
+    "interactive": true,
+    "weight": 3.918625,
+    "count": 1,
+    "key": "bg|#33d17a|1"
+   },
+   {
+    "kind": "bg",
+    "hex": "#e01b24",
+    "interactive": false,
+    "weight": 34.2,
+    "count": 1,
+    "key": "bg|#e01b24|0"
+   },
+   {
+    "kind": "bg",
+    "hex": "#e2222b",
+    "interactive": false,
+    "weight": 25.92,
+    "count": 1,
+    "key": "bg|#e2222b|0"
+   }
+  ],
+  "fonts": [
+   {
+    "count": 11,
+    "family": "\"Comic Sans MS\", cursive",
+    "weight": 400,
+    "chars": 711,
+    "roles": {
+     "body": 711
+    },
+    "key": "\"Comic Sans MS\", cursive|400"
+   },
+   {
+    "count": 4,
+    "family": "Arial",
+    "weight": 400,
+    "chars": 18,
+    "roles": {
+     "ui": 18
+    },
+    "key": "Arial|400"
+   },
+   {
+    "count": 2,
+    "family": "\"Comic Sans MS\", cursive",
+    "weight": 700,
+    "chars": 55,
+    "roles": {
+     "heading": 22,
+     "body": 33
+    },
+    "key": "\"Comic Sans MS\", cursive|700"
+   },
+   {
+    "count": 1,
+    "family": "Georgia, serif",
+    "weight": 700,
+    "chars": 12,
+    "roles": {
+     "heading": 12
+    },
+    "key": "Georgia, serif|700"
+   },
+   {
+    "count": 7,
+    "family": "Georgia, serif",
+    "weight": 400,
+    "chars": 124,
+    "roles": {
+     "body": 124
+    },
+    "key": "Georgia, serif|400"
+   },
+   {
+    "count": 1,
+    "family": "\"Courier New\", monospace",
+    "weight": 400,
+    "chars": 66,
+    "roles": {
+     "body": 66
+    },
+    "key": "\"Courier New\", monospace|400"
+   },
+   {
+    "count": 1,
+    "family": "Verdana, sans-serif",
+    "weight": 400,
+    "chars": 72,
+    "roles": {
+     "body": 72
+    },
+    "key": "Verdana, sans-serif|400"
+   },
+   {
+    "count": 1,
+    "family": "Impact, fantasy",
+    "weight": 400,
+    "chars": 30,
+    "roles": {
+     "body": 30
+    },
+    "key": "Impact, fantasy|400"
+   }
+  ],
+  "sizes": [
+   {
+    "count": 3,
+    "tags": {
+     "a": 3
+    },
+    "key": "10"
+   },
+   {
+    "count": 2,
+    "tags": {
+     "button": 2
+    },
+    "key": "12"
+   },
+   {
+    "count": 16,
+    "tags": {
+     "p": 12,
+     "a": 3,
+     "div": 1
+    },
+    "key": "13"
+   },
+   {
+    "count": 2,
+    "tags": {
+     "button": 1,
+     "a": 1
+    },
+    "key": "14"
+   },
+   {
+    "count": 1,
+    "tags": {
+     "p": 1
+    },
+    "key": "15"
+   },
+   {
+    "count": 1,
+    "tags": {
+     "button": 1
+    },
+    "key": "17"
+   },
+   {
+    "count": 1,
+    "tags": {
+     "h3": 1
+    },
+    "key": "15.2"
+   },
+   {
+    "count": 1,
+    "tags": {
+     "h5": 1
+    },
+    "key": "10.8"
+   },
+   {
+    "count": 1,
+    "tags": {
+     "h2": 1
+    },
+    "key": "19.5"
+   }
+  ],
+  "spacing": [
+   {
+    "count": 14,
+    "key": "1"
+   },
+   {
+    "count": 2,
+    "key": "2"
+   },
+   {
+    "count": 2,
+    "key": "3"
+   },
+   {
+    "count": 2,
+    "key": "5"
+   },
+   {
+    "count": 4,
+    "key": "6"
+   },
+   {
+    "count": 4,
+    "key": "7"
+   },
+   {
+    "count": 6,
+    "key": "9"
+   },
+   {
+    "count": 5,
+    "key": "11"
+   },
+   {
+    "count": 31,
+    "key": "13"
+   },
+   {
+    "count": 12,
+    "key": "15"
+   },
+   {
+    "count": 2,
+    "key": "16"
+   },
+   {
+    "count": 2,
+    "key": "17"
+   },
+   {
+    "count": 2,
+    "key": "18"
+   },
+   {
+    "count": 2,
+    "key": "19"
+   },
+   {
+    "count": 8,
+    "key": "21"
+   },
+   {
+    "count": 1,
+    "key": "23"
+   },
+   {
+    "count": 4,
+    "key": "27"
+   }
+  ],
+  "radii": [
+   {
+    "count": 1,
+    "key": "3"
+   },
+   {
+    "count": 2,
+    "key": "4"
+   },
+   {
+    "count": 1,
+    "key": "7"
+   },
+   {
+    "count": 1,
+    "key": "12"
+   },
+   {
+    "count": 1,
+    "key": "20"
+   }
+  ],
+  "shadows": [
+   {
+    "count": 1,
+    "key": "rgba(0, 0, 0, 0.2) 0px 2px 3px 0px"
+   },
+   {
+    "count": 1,
+    "key": "rgba(0, 0, 0, 0.4) 1px 1px 9px 0px"
+   }
+  ],
+  "contrast": [
+   {
+    "count": 1,
+    "fg": "#ffffff",
+    "bg": "#666666",
+    "large": false,
+    "ratio": 5.74,
+    "chars": 54,
+    "selector": "#cookie-wall > p",
+    "bbox": {
+     "x": 0,
+     "y": 13,
+     "w": 1440,
+     "h": 68
+    },
+    "snippet": "<p>We use cookies. By continuing you agree to everything. <button class=\"btn-b\">OK</button></p>",
+    "key": "#ffffff|#666666|0"
+   },
+   {
+    "count": 2,
+    "fg": "#ffffff",
+    "bg": "#1a5fb4",
+    "large": false,
+    "ratio": 6.29,
+    "chars": 5,
+    "selector": "#cookie-wall > p > button.btn-b",
+    "bbox": {
+     "x": 356,
+     "y": 34,
+     "w": 39,
+     "h": 26
+    },
+    "snippet": "<button class=\"btn-b\">OK</button>",
+    "key": "#ffffff|#1a5fb4|0"
+   },
+   {
+    "count": 2,
+    "fg": "#000000",
+    "bg": "#f4f4f4",
+    "large": false,
+    "ratio": 19.09,
+    "chars": 55,
+    "selector": "body > div.hero:nth-of-type(2) > h3",
+    "bbox": {
+     "x": 26,
+     "y": 35,
+     "w": 1388,
+     "h": 21
+    },
+    "snippet": "<h3>Welcome to our website</h3>",
+    "key": "#000000|#f4f4f4|0"
+   },
+   {
+    "count": 1,
+    "fg": "#b5b5b5",
+    "bg": "#f4f4f4",
+    "large": false,
+    "ratio": 1.86,
+    "chars": 101,
+    "selector": "body > div.hero:nth-of-type(2) > p.faint:nth-of-type(1)",
+    "bbox": {
+     "x": 26,
+     "y": 107,
+     "w": 1388,
+     "h": 18
+    },
+    "snippet": "<p class=\"faint\">This text is very light grey on white and hard to read for most people. It fails WCAG contrast badly.</p>",
+    "key": "#b5b5b5|#f4f4f4|0"
+   },
+   {
+    "count": 1,
+    "fg": "#a9a9a9",
+    "bg": "#ffffff",
+    "large": false,
+    "ratio": 2.35,
+    "chars": 94,
+    "selector": "body > div.hero:nth-of-type(2) > p.faint2:nth-of-type(2)",
+    "bbox": {
+     "x": 26,
+     "y": 138,
+     "w": 1388,
+     "h": 18
+    },
+    "snippet": "<p class=\"faint2\">More faint text that keeps going so that it counts as real body copy for the contrast checker.</p>",
+    "key": "#a9a9a9|#ffffff|0"
+   },
+   {
+    "count": 1,
+    "fg": "#000000",
+    "bg": "#ffffff",
+    "large": true,
+    "ratio": 21,
+    "chars": 12,
+    "selector": "body > div.card.serif:nth-of-type(3) > h2",
+    "bbox": {
+     "x": 23,
+     "y": 364,
+     "w": 1394,
+     "h": 22
+    },
+    "snippet": "<h2>Our services</h2>",
+    "key": "#000000|#ffffff|1"
+   },
+   {
+    "count": 5,
+    "fg": "#000000",
+    "bg": "#ffffff",
+    "large": false,
+    "ratio": 21,
+    "chars": 610,
+    "selector": "body > div.card.serif:nth-of-type(3) > p:nth-of-type(1)",
+    "bbox": {
+     "x": 23,
+     "y": 402,
+     "w": 1394,
+     "h": 15
+    },
+    "snippet": "<p>Serif text in a card with off-grid spacing. <a href=\"/services\">click here</a> and <a href=\"#\">read more</a>.</p>",
+    "key": "#000000|#ffffff|0"
+   },
+   {
+    "count": 6,
+    "fg": "#0000ee",
+    "bg": "#ffffff",
+    "large": false,
+    "ratio": 9.4,
+    "chars": 33,
+    "selector": "body > div.card.serif:nth-of-type(3) > p:nth-of-type(1) > a:nth-of-type(1)",
+    "bbox": {
+     "x": 256,
+     "y": 402,
+     "w": 55,
+     "h": 15
+    },
+    "snippet": "<a href=\"/services\">click here</a>",
+    "key": "#0000ee|#ffffff|0"
+   },
+   {
+    "count": 1,
+    "fg": "#1a5fb4",
+    "bg": "#ffffff",
+    "large": false,
+    "ratio": 6.29,
+    "chars": 9,
+    "selector": "body > div.card.serif:nth-of-type(3) > p.blue1:nth-of-type(2)",
+    "bbox": {
+     "x": 23,
+     "y": 430,
+     "w": 1394,
+     "h": 15
+    },
+    "snippet": "<p class=\"blue1\">Blue one.</p>",
+    "key": "#1a5fb4|#ffffff|0"
+   },
+   {
+    "count": 1,
+    "fg": "#1c62b8",
+    "bg": "#ffffff",
+    "large": false,
+    "ratio": 6.02,
+    "chars": 26,
+    "selector": "body > div.card.serif:nth-of-type(3) > p.blue2:nth-of-type(3)",
+    "bbox": {
+     "x": 23,
+     "y": 458,
+     "w": 1394,
+     "h": 15
+    },
+    "snippet": "<p class=\"blue2\">Blue two, almost the same.</p>",
+    "key": "#1c62b8|#ffffff|0"
+   },
+   {
+    "count": 1,
+    "fg": "#1f66bd",
+    "bg": "#ffffff",
+    "large": false,
+    "ratio": 5.69,
+    "chars": 11,
+    "selector": "body > div.card.serif:nth-of-type(3) > p.blue3:nth-of-type(4)",
+    "bbox": {
+     "x": 23,
+     "y": 486,
+     "w": 1394,
+     "h": 15
+    },
+    "snippet": "<p class=\"blue3\">Blue three.</p>",
+    "key": "#1f66bd|#ffffff|0"
+   },
+   {
+    "count": 1,
+    "fg": "#2369c0",
+    "bg": "#ffffff",
+    "large": false,
+    "ratio": 5.45,
+    "chars": 10,
+    "selector": "body > div.card.serif:nth-of-type(3) > p.blue4:nth-of-type(5)",
+    "bbox": {
+     "x": 23,
+     "y": 514,
+     "w": 1394,
+     "h": 15
+    },
+    "snippet": "<p class=\"blue4\">Blue four.</p>",
+    "key": "#2369c0|#ffffff|0"
+   },
+   {
+    "count": 3,
+    "fg": "#ffffff",
+    "bg": "#e01b24",
+    "large": false,
+    "ratio": 4.83,
+    "chars": 56,
+    "selector": "body > form > button.btn-a",
+    "bbox": {
+     "x": 233,
+     "y": 870,
+     "w": 92,
+     "h": 34
+    },
+    "snippet": "<button class=\"btn-a\">Subscribe</button>",
+    "key": "#ffffff|#e01b24|0"
+   },
+   {
+    "count": 1,
+    "fg": "#ffffff",
+    "bg": "#33d17a",
+    "large": false,
+    "ratio": 1.99,
+    "chars": 4,
+    "selector": "body > p:nth-of-type(2) > button.btn-c:nth-of-type(2)",
+    "bbox": {
+     "x": 47,
+     "y": 917,
+     "w": 85,
+     "h": 46
+    },
+    "snippet": "<button class=\"btn-c\">Join</button>",
+    "key": "#ffffff|#33d17a|0"
+   },
+   {
+    "count": 1,
+    "fg": "#ffffff",
+    "bg": "#e2222b",
+    "large": false,
+    "ratio": 4.67,
+    "chars": 8,
+    "selector": "body > p.red2:nth-of-type(3)",
+    "bbox": {
+     "x": 0,
+     "y": 1023,
+     "w": 1440,
+     "h": 18
+    },
+    "snippet": "<p class=\"red2\">Red two.</p>",
+    "key": "#ffffff|#e2222b|0"
+   }
+  ],
+  "contrastUnknown": 0,
+  "buttons": [
+   {
+    "count": 2,
+    "selector": "body > form > button.btn-a",
+    "text": "Subscribe",
+    "key": "#e01b24|#ffffff|4|9|15|14|400|0px"
+   },
+   {
+    "count": 1,
+    "selector": "body > p:nth-of-type(2) > button.btn-b:nth-of-type(1)",
+    "text": "Buy",
+    "key": "#1a5fb4|#ffffff|0|6|11|12|400|0px"
+   },
+   {
+    "count": 1,
+    "selector": "body > p:nth-of-type(2) > button.btn-c:nth-of-type(2)",
+    "text": "Join",
+    "key": "#33d17a|#ffffff|20|13|27|17|400|0px"
+   }
+  ],
+  "cssVars": {},
+  "fontFaces": [],
+  "fontLinks": [],
+  "importsGoogle": false,
+  "assets": {
+   "logoUrl": null,
+   "favicon": null,
+   "themeColor": null,
+   "ogImage": null
+  },
+  "platformFonts": {
+   "Georgia": "Georgia",
+   "Comic Sans MS": "Comic Sans MS",
+   "Arial": "Arial"
+  }
+ },
+ "mobile": {
+  "viewportW": 1560,
+  "scrollWidth": 1900,
+  "clipped": false,
+  "overflow": true,
+  "overflowOffenders": [
+   {
+    "selector": "body > div:nth-of-type(8)",
+    "right": 1900,
+    "snippet": "<div class=\"wide red1\">This box is wider than any phone screen.</div>",
+    "bbox": {
+     "x": 0,
+     "y": 1013,
+     "w": 1900,
+     "h": 18
+    }
+   }
+  ],
+  "tapTargets": {
+   "checked": 10,
+   "below24": 6,
+   "below44": 3,
+   "samples": [
+    {
+     "selector": "#cookie-wall > p > button",
+     "w": 39,
+     "h": 26,
+     "level": 44,
+     "snippet": "<button class=\"btn-b\">OK</button>",
+     "bbox": {
+      "x": 356,
+      "y": 34,
+      "w": 39,
+      "h": 26
+     }
+    },
+    {
+     "selector": "body > form > input",
+     "w": 177,
+     "h": 21,
+     "level": 24,
+     "snippet": "<input type=\"text\" placeholder=\"Your email\">",
+     "bbox": {
+      "x": 0,
+      "y": 898,
+      "w": 177,
+      "h": 21
+     }
+    },
+    {
+     "selector": "body > form > select",
+     "w": 48,
+     "h": 19,
+     "level": 24,
+     "snippet": "<select><option>One</option></select>",
+     "bbox": {
+      "x": 181,
+      "y": 899,
+      "w": 48,
+      "h": 19
+     }
+    },
+    {
+     "selector": "body > form > button",
+     "w": 92,
+     "h": 34,
+     "level": 44,
+     "snippet": "<button class=\"btn-a\">Subscribe</button>",
+     "bbox": {
+      "x": 233,
+      "y": 891,
+      "w": 92,
+      "h": 34
+     }
+    },
+    {
+     "selector": "body > p:nth-of-type(2) > button:nth-of-type(1)",
+     "w": 43,
+     "h": 26,
+     "level": 44,
+     "snippet": "<button class=\"btn-b\">Buy</button>",
+     "bbox": {
+      "x": 0,
+      "y": 949,
+      "w": 43,
+      "h": 26
+     }
+    },
+    {
+     "selector": "body > div:nth-of-type(7) > a:nth-of-type(1)",
+     "w": 9,
+     "h": 16,
+     "level": 24,
+     "snippet": "<a href=\"/a\">A</a>",
+     "bbox": {
+      "x": 0,
+      "y": 997,
+      "w": 9,
+      "h": 16
+     }
+    },
+    {
+     "selector": "body > div:nth-of-type(7) > a:nth-of-type(2)",
+     "w": 8,
+     "h": 16,
+     "level": 24,
+     "snippet": "<a href=\"/b\">B</a>",
+     "bbox": {
+      "x": 9,
+      "y": 997,
+      "w": 8,
+      "h": 16
+     }
+    },
+    {
+     "selector": "body > div:nth-of-type(7) > a:nth-of-type(3)",
+     "w": 8,
+     "h": 16,
+     "level": 24,
+     "snippet": "<a href=\"/c\">C</a>",
+     "bbox": {
+      "x": 18,
+      "y": 997,
+      "w": 8,
+      "h": 16
+     }
+    },
+    {
+     "selector": "body > a",
+     "w": 67,
+     "h": 18,
+     "level": 24,
+     "snippet": "<a href=\"/missing-page\">Broken link</a>",
+     "bbox": {
+      "x": 0,
+      "y": 1211,
+      "w": 67,
+      "h": 18
+     }
+    }
+   ]
+  },
+  "viewportMeta": null,
+  "docH": 3376,
+  "bodyFontPx": 13
+ },
+ "network": {
+  "requests": 9,
+  "transferBytes": 468668,
+  "byType": {
+   "document": {
+    "count": 1,
+    "bytes": 4493
+   },
+   "stylesheet": {
+    "count": 2,
+    "bytes": 652
+   },
+   "image": {
+    "count": 2,
+    "bytes": 462759
+   },
+   "script": {
+    "count": 1,
+    "bytes": 302
+   },
+   "media": {
+    "count": 2,
+    "bytes": 462
+   },
+   "other": {
+    "count": 1,
+    "bytes": 0
+   }
+  },
+  "thirdParty": [],
+  "thirdPartyBytes": 0,
+  "imageFormats": {
+   "png": 2
+  },
+  "uncompressed": [
+   {
+    "url": "https://fixture.test/bad.html",
+    "bytes": 4493,
+    "type": "document"
+   }
+  ],
+  "largestImages": [
+   {
+    "url": "https://fixture.test/assets/huge.png",
+    "bytes": 238293,
+    "mime": "image/png"
+   },
+   {
+    "url": "https://fixture.test/assets/photo.png",
+    "bytes": 224466,
+    "mime": "image/png"
+   }
+  ],
+  "blockedRequests": 2,
+  "failedRequests": 2,
+  "capped": false
+ },
+ "axe": [
+  {
+   "id": "color-contrast",
+   "impact": "serious",
+   "help": "Elements must meet minimum color contrast ratio thresholds",
+   "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+   "tags": [
+    "cat.color",
+    "wcag2aa",
+    "wcag143",
+    "TTv5",
+    "TT13.c",
+    "EN-301-549",
+    "EN-9.1.4.3",
+    "ACT",
+    "RGAAv4",
+    "RGAA-3.2.1"
+   ],
+   "nodeCount": 3,
+   "nodes": [
+    {
+     "target": ".faint",
+     "html": "<p class=\"faint\">This text is very light grey on white and hard to read for most people. It fails WCAG contrast badly.</p>",
+     "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.86 (foreground color: #b5b5b5, background color: #f4f4f4, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+     "measured": "1.86:1 (#b5b5b5 on #f4f4f4)",
+     "expected": ">= 4.5:1",
+     "bbox": {
+      "x": 26,
+      "y": 107,
+      "w": 1388,
+      "h": 18
+     }
+    },
+    {
+     "target": ".faint2",
+     "html": "<p class=\"faint2\">More faint text that keeps going so that it counts as real body copy for the contrast checker.</p>",
+     "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.35 (foreground color: #a9a9a9, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+     "measured": "2.35:1 (#a9a9a9 on #ffffff)",
+     "expected": ">= 4.5:1",
+     "bbox": {
+      "x": 26,
+      "y": 138,
+      "w": 1388,
+      "h": 18
+     }
+    },
+    {
+     "target": ".btn-c",
+     "html": "<button class=\"btn-c\">Join</button>",
+     "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.99 (foreground color: #ffffff, background color: #33d17a, font size: 12.8pt (17px), font weight: normal). Expected contrast ratio of 4.5:1",
+     "measured": "1.99:1 (#ffffff on #33d17a)",
+     "expected": ">= 4.5:1",
+     "bbox": {
+      "x": 47,
+      "y": 917,
+      "w": 85,
+      "h": 46
+     }
+    }
+   ]
+  },
+  {
+   "id": "heading-order",
+   "impact": "moderate",
+   "help": "Heading levels should only increase by one",
+   "description": "Ensure the order of headings is semantically correct",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/heading-order?application=playwright",
+   "tags": [
+    "cat.semantics",
+    "best-practice"
+   ],
+   "nodeCount": 1,
+   "nodes": [
+    {
+     "target": "h5",
+     "html": "<h5>Some subheading that skips levels</h5>",
+     "failureSummary": "Fix any of the following:\n  Heading order invalid",
+     "bbox": {
+      "x": 26,
+      "y": 74,
+      "w": 1388,
+      "h": 15
+     }
+    }
+   ]
+  },
+  {
+   "id": "html-has-lang",
+   "impact": "serious",
+   "help": "<html> element must have a lang attribute",
+   "description": "Ensure every HTML document has a lang attribute",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/html-has-lang?application=playwright",
+   "tags": [
+    "cat.language",
+    "wcag2a",
+    "wcag311",
+    "TTv5",
+    "TT11.a",
+    "EN-301-549",
+    "EN-9.3.1.1",
+    "ACT",
+    "RGAAv4",
+    "RGAA-8.3.1"
+   ],
+   "nodeCount": 1,
+   "nodes": [
+    {
+     "target": "html",
+     "html": "<html>",
+     "failureSummary": "Fix any of the following:\n  The <html> element does not have a lang attribute",
+     "bbox": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1208
+     }
+    }
+   ]
+  },
+  {
+   "id": "image-alt",
+   "impact": "critical",
+   "help": "Images must have alternative text",
+   "description": "Ensure <img> elements have alternative text or a role of none or presentation",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/image-alt?application=playwright",
+   "tags": [
+    "cat.text-alternatives",
+    "wcag2a",
+    "wcag111",
+    "section508",
+    "section508.22.a",
+    "TTv5",
+    "TT7.a",
+    "TT7.b",
+    "EN-301-549",
+    "EN-9.1.1.1",
+    "ACT",
+    "RGAAv4",
+    "RGAA-1.1.1"
+   ],
+   "nodeCount": 2,
+   "nodes": [
+    {
+     "target": "img[src$=\"huge.png\"]:nth-child(3)",
+     "html": "<img src=\"assets/huge.png\" style=\"width:160px\">",
+     "failureSummary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics ",
+     "bbox": {
+      "x": 0,
+      "y": 203,
+      "w": 160,
+      "h": 120
+     }
+    },
+    {
+     "target": "img[src$=\"photo.png\"]",
+     "html": "<img src=\"assets/photo.png\" style=\"width:200px\">",
+     "failureSummary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics ",
+     "bbox": {
+      "x": 328,
+      "y": 189,
+      "w": 200,
+      "h": 133
+     }
+    }
+   ]
+  },
+  {
+   "id": "landmark-one-main",
+   "impact": "moderate",
+   "help": "Document should have one main landmark",
+   "description": "Ensure the document has a main landmark",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/landmark-one-main?application=playwright",
+   "tags": [
+    "cat.semantics",
+    "best-practice"
+   ],
+   "nodeCount": 1,
+   "nodes": [
+    {
+     "target": "html",
+     "html": "<html>",
+     "failureSummary": "Fix all of the following:\n  Document does not have a main landmark",
+     "bbox": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1208
+     }
+    }
+   ]
+  },
+  {
+   "id": "page-has-heading-one",
+   "impact": "moderate",
+   "help": "Page should contain a level-one heading",
+   "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/page-has-heading-one?application=playwright",
+   "tags": [
+    "cat.semantics",
+    "best-practice"
+   ],
+   "nodeCount": 1,
+   "nodes": [
+    {
+     "target": "html",
+     "html": "<html>",
+     "failureSummary": "Fix all of the following:\n  Page must have a level-one heading",
+     "bbox": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1208
+     }
+    }
+   ]
+  },
+  {
+   "id": "region",
+   "impact": "moderate",
+   "help": "All page content should be contained by landmarks",
+   "description": "Ensure all page content is contained by landmarks",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/region?application=playwright",
+   "tags": [
+    "cat.keyboard",
+    "best-practice",
+    "RGAAv4",
+    "RGAA-9.2.1"
+   ],
+   "nodeCount": 18,
+   "nodes": [
+    {
+     "target": "#cookie-wall",
+     "html": "<div class=\"overlay\" id=\"cookie-wall\"><p>We use cookies. By continuing you agree to everything. <button class=\"btn-b\">OK</button></p></div>",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 720
+     }
+    },
+    {
+     "target": ".hero",
+     "html": "<div class=\"hero\">",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 7,
+      "y": 7,
+      "w": 1426,
+      "h": 175
+     }
+    },
+    {
+     "target": "img[src$=\"huge.png\"]:nth-child(3)",
+     "html": "<img src=\"assets/huge.png\" style=\"width:160px\">",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 0,
+      "y": 203,
+      "w": 160,
+      "h": 120
+     }
+    },
+    {
+     "target": "img[src$=\"photo.png\"]",
+     "html": "<img src=\"assets/photo.png\" style=\"width:200px\">",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 328,
+      "y": 189,
+      "w": 200,
+      "h": 133
+     }
+    },
+    {
+     "target": ".card",
+     "html": "<div class=\"card serif\">",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 5,
+      "y": 338,
+      "w": 1430,
+      "h": 214
+     }
+    },
+    {
+     "target": ".card2",
+     "html": "<div class=\"card2 mono\"><p>Monospaced paragraph for no reason at all, used as body copy here.</p></div>",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 21,
+      "y": 575,
+      "w": 1398,
+      "h": 73
+     }
+    },
+    {
+     "target": ".card3",
+     "html": "<div class=\"card3 verdana\"><p>Verdana paragraph that also counts as a font family in use on this page.</p></div>",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 0,
+      "y": 669,
+      "w": 1440,
+      "h": 100
+     }
+    },
+    {
+     "target": ".impact",
+     "html": "<div class=\"impact\"><p>Impact text, the fifth family.</p></div>",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 0,
+      "y": 782,
+      "w": 1440,
+      "h": 16
+     }
+    },
+    {
+     "target": ".longtext",
+     "html": "<p class=\"longtext\">",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 0,
+      "y": 813,
+      "w": 1440,
+      "h": 42
+     }
+    },
+    {
+     "target": "input",
+     "html": "<input type=\"text\" placeholder=\"Your email\">",
+     "failureSummary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+     "bbox": {
+      "x": 0,
+      "y": 877,
+      "w": 177,
+      "h": 21
+     }
+    }
+   ]
+  },
+  {
+   "id": "select-name",
+   "impact": "critical",
+   "help": "Select element must have an accessible name",
+   "description": "Ensure select element has an accessible name",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/select-name?application=playwright",
+   "tags": [
+    "cat.forms",
+    "wcag2a",
+    "wcag412",
+    "section508",
+    "section508.22.n",
+    "TTv5",
+    "TT5.c",
+    "EN-301-549",
+    "EN-9.4.1.2",
+    "ACT",
+    "RGAAv4",
+    "RGAA-11.1.1"
+   ],
+   "nodeCount": 1,
+   "nodes": [
+    {
+     "target": "select",
+     "html": "<select><option>One</option></select>",
+     "failureSummary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Elem",
+     "bbox": {
+      "x": 181,
+      "y": 878,
+      "w": 48,
+      "h": 19
+     }
+    }
+   ]
+  },
+  {
+   "id": "target-size",
+   "impact": "serious",
+   "help": "All touch targets must be 24px large, or leave sufficient space",
+   "description": "Ensure touch targets have sufficient size and space",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/target-size?application=playwright",
+   "tags": [
+    "cat.sensory-and-visual-cues",
+    "wcag22aa",
+    "wcag258"
+   ],
+   "nodeCount": 3,
+   "nodes": [
+    {
+     "target": "a[href=\"/a\"]",
+     "html": "<a href=\"/a\">A</a>",
+     "failureSummary": "Fix any of the following:\n  Target has insufficient size (9.3px by 16px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 0px instead of at least 24px.",
+     "bbox": {
+      "x": 0,
+      "y": 976,
+      "w": 9,
+      "h": 16
+     }
+    },
+    {
+     "target": "a[href=\"/b\"]",
+     "html": "<a href=\"/b\">B</a>",
+     "failureSummary": "Fix any of the following:\n  Target has insufficient size (8.3px by 16px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 0px instead of at least 24px.",
+     "bbox": {
+      "x": 9,
+      "y": 976,
+      "w": 8,
+      "h": 16
+     }
+    },
+    {
+     "target": "a[href=\"/c\"]",
+     "html": "<a href=\"/c\">C</a>",
+     "failureSummary": "Fix any of the following:\n  Target has insufficient size (8px by 16px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 0px instead of at least 24px.",
+     "bbox": {
+      "x": 18,
+      "y": 976,
+      "w": 8,
+      "h": 16
+     }
+    }
+   ]
+  }
+ ],
+ "screenshots": {},
+ "timings": {
+  "load page": 187,
+  "wait for content": 985,
+  "read page structure": 133,
+  "accessibility checks": 11059,
+  "mobile pass": 802,
+  "total": 14100
+ },
+ "reduced": false,
+ "notes": []
+}

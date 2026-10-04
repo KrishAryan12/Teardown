@@ -1,0 +1,68 @@
+<!-- Intentionally terrible page for Teardown tests. Every flaw here is deliberate. -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hi</title>
+<meta name="generator" content="SiteBuilder 3.2.1">
+<link rel="stylesheet" href="assets/bad.css">
+<script src="assets/blocking.js"></script>
+<style>
+  body { margin: 0; background: #ffffff; font-family: "Comic Sans MS", cursive; font-size: 13px; }
+  .hero { background: #f4f4f4; padding: 13px 19px; margin: 7px; }
+  .faint { color: #b5b5b5; }
+  .faint2 { color: #a9a9a9; background: #ffffff; }
+  .card { margin: 11px 5px 23px; padding: 9px 17px; border-radius: 3px; border: 1px solid #dddddd; box-shadow: 0 2px 3px rgba(0,0,0,.2); }
+  .card2 { margin: 21px; padding: 15px; border-radius: 7px; border: 1px solid #dedede; box-shadow: 1px 1px 9px rgba(0,0,0,.4); }
+  .card3 { padding: 27px 3px; border-radius: 12px; border: 2px solid #e0e0e0; }
+  .serif { font-family: Georgia, serif; }
+  .mono { font-family: "Courier New", monospace; }
+  .verdana { font-family: Verdana, sans-serif; }
+  .impact { font-family: Impact, fantasy; }
+  .blue1 { color: #1a5fb4; } .blue2 { color: #1c62b8; } .blue3 { color: #1f66bd; } .blue4 { color: #2369c0; }
+  .red1 { background: #e01b24; color: #fff; } .red2 { background: #e2222b; color: #fff; }
+  .wide { width: 1900px; }
+  .tiny a { font-size: 10px; display: inline-block; padding: 1px; }
+  a:focus { outline: none; }
+  button:focus { outline: none; }
+  .btn-a { background: #e01b24; color: #ffffff; padding: 9px 15px; border-radius: 4px; border: 0; font-size: 14px; }
+  .btn-b { background: #1a5fb4; color: #ffffff; padding: 6px 11px; border-radius: 0; border: 0; font-size: 12px; }
+  .btn-c { background: #33d17a; color: #ffffff; padding: 13px 27px; border-radius: 20px; border: 0; font-size: 17px; }
+  .overlay { position: fixed; inset: 0 0 20% 0; background: rgba(0,0,0,.6); color: #fff; z-index: 99; }
+  .overlay p { color: #fff; padding: 21px; }
+  .longtext { max-width: none; font-size: 15px; }
+</style>
+</head>
+<body>
+<div class="overlay" id="cookie-wall"><p>We use cookies. By continuing you agree to everything. <button class="btn-b">OK</button></p></div>
+<div class="hero">
+  <h3>Welcome to our website</h3>
+  <h5>Some subheading that skips levels</h5>
+  <p class="faint">This text is very light grey on white and hard to read for most people. It fails WCAG contrast badly.</p>
+  <p class="faint2">More faint text that keeps going so that it counts as real body copy for the contrast checker.</p>
+</div>
+<img src="assets/huge.png" style="width:160px">
+<img src="assets/huge.png" width="160" alt="">
+<img src="assets/photo.png" style="width:200px">
+<div class="card serif">
+  <h2>Our services</h2>
+  <p>Serif text in a card with off-grid spacing. <a href="/services">click here</a> and <a href="#">read more</a>.</p>
+  <p class="blue1">Blue one.</p><p class="blue2">Blue two, almost the same.</p><p class="blue3">Blue three.</p><p class="blue4">Blue four.</p>
+</div>
+<div class="card2 mono"><p>Monospaced paragraph for no reason at all, used as body copy here.</p></div>
+<div class="card3 verdana"><p>Verdana paragraph that also counts as a font family in use on this page.</p></div>
+<div class="impact"><p>Impact text, the fifth family.</p></div>
+<p class="longtext">This paragraph is deliberately very wide with no max-width so that the line length is far longer than the comfortable reading measure of about sixty to seventy-five characters. It keeps going and going, sentence after sentence, so that each line on a desktop viewport holds well over a hundred characters, which makes it tiring to read and easy to lose your place when moving to the next line.</p>
+<form>
+  <input type="text" placeholder="Your email">
+  <select><option>One</option></select>
+  <button class="btn-a">Subscribe</button>
+</form>
+<p><button class="btn-b">Buy</button> <button class="btn-c">Join</button> <a class="btn-a" href="/signup">Sign up</a></p>
+<div class="tiny"><a href="/a">A</a><a href="/b">B</a><a href="/c">C</a></div>
+<div class="wide red1">This box is wider than any phone screen.</div>
+<p class="red2">Red two.</p>
+<a href="/missing-page">Broken link</a>
+<img src="http://insecure.invalid/tracker.gif" alt="tracker" width="1" height="1">
+<video src="assets/none.mp4" autoplay></video>
+</body>
+</html>

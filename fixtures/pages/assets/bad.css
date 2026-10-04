@@ -1,0 +1,4 @@
+/* Unminified, uncompressed stylesheet loaded in <head> (render-blocking). No design tokens on purpose. */
+footer {
+  padding: 13px;
+}

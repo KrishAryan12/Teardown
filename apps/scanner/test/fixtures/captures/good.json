@@ -1,0 +1,695 @@
+{
+ "requestedUrl": "https://fixture.test/good.html",
+ "finalUrl": "https://fixture.test/good.html",
+ "status": 200,
+ "headers": {
+  "connection": "keep-alive",
+  "keep-alive": "timeout=5",
+  "transfer-encoding": "chunked",
+  "cache-control": "no-cache",
+  "content-type": "text/html; charset=utf-8",
+  "date": "Sun, 04 Oct 2026 14:53:05 GMT"
+ },
+ "redirects": [],
+ "rawHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Northwind Studio: calm, fast websites for small teams</title>\n  <meta name=\"description\" content=\"Northwind Studio designs and builds fast, accessible websites for small teams. See our work, our process and how to start a project.\">\n  <link rel=\"canonical\" href=\"/good.html\">\n  <meta property=\"og:title\" content=\"Northwind Studio\">\n  <meta property=\"og:description\" content=\"Fast, accessible websites for small teams.\">\n  <meta property=\"og:image\" content=\"https://northwind.example/og.png\">\n  <meta property=\"og:type\" content=\"website\">\n  <meta property=\"og:url\" content=\"/good.html\">\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n  <meta name=\"theme-color\" content=\"#0f3d3e\">\n  <link rel=\"icon\" href=\"assets/favicon.svg\" type=\"image/svg+xml\">\n  <script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"Northwind Studio\",\"url\":\"https://northwind.example/\"}</script>\n  <style>\n    :root {\n      --color-ink: #13201f;\n      --color-paper: #fbfaf7;\n      --color-brand: #0f3d3e;\n      --color-accent: #b4451f;\n      --space-1: 8px;\n      --space-2: 16px;\n      --space-3: 24px;\n      --space-4: 32px;\n      --radius: 8px;\n      --font-body: Georgia, \"Times New Roman\", serif;\n      --font-ui: Arial, Helvetica, sans-serif;\n    }\n    * { box-sizing: border-box; }\n    body { margin: 0; background: var(--color-paper); color: var(--color-ink); font: 18px/1.6 var(--font-body); }\n    .skip { position: absolute; left: -999px; top: 8px; background: var(--color-brand); color: #fff; padding: 8px 16px; }\n    .skip:focus { left: 8px; }\n    a { color: var(--color-brand); }\n    a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }\n    header, main, footer { max-width: 62ch; margin: 0 auto; padding: var(--space-3) var(--space-2); }\n    n",
+ "title": "Northwind Studio: calm, fast websites for small teams",
+ "facts": {
+  "url": "https://fixture.test/good.html",
+  "hasLayout": true,
+  "viewport": {
+   "w": 1440,
+   "h": 900
+  },
+  "doc": {
+   "w": 1440,
+   "h": 1376
+  },
+  "head": {
+   "title": "Northwind Studio: calm, fast websites for small teams",
+   "titleCount": 1,
+   "lang": "en",
+   "metaDescription": "Northwind Studio designs and builds fast, accessible websites for small teams. See our work, our process and how to start a project.",
+   "metaRobots": null,
+   "viewport": "width=device-width, initial-scale=1",
+   "charset": "utf-8",
+   "generator": null,
+   "themeColor": "#0f3d3e",
+   "canonical": "https://fixture.test/good.html",
+   "canonicalCount": 1,
+   "og": {
+    "title": "Northwind Studio",
+    "description": "Fast, accessible websites for small teams.",
+    "image": "https://northwind.example/og.png",
+    "type": "website",
+    "url": "/good.html"
+   },
+   "twitter": {
+    "card": "summary_large_image",
+    "title": null,
+    "image": null
+   },
+   "jsonLd": [
+    {
+     "valid": true,
+     "types": [
+      "Organization"
+     ]
+    }
+   ],
+   "hreflang": [],
+   "favicon": "https://fixture.test/assets/favicon.svg"
+  },
+  "headings": [
+   {
+    "level": 1,
+    "text": "Calm, fast websites for small teams",
+    "selector": "#main > h1",
+    "visible": true,
+    "bbox": {
+     "x": 394,
+     "y": 152,
+     "w": 653,
+     "h": 96
+    }
+   },
+   {
+    "level": 2,
+    "text": "What we do",
+    "selector": "#main > h2:nth-of-type(1)",
+    "visible": true,
+    "bbox": {
+     "x": 394,
+     "y": 796,
+     "w": 653,
+     "h": 31
+    }
+   },
+   {
+    "level": 2,
+    "text": "Get our notes",
+    "selector": "#main > h2:nth-of-type(2)",
+    "visible": true,
+    "bbox": {
+     "x": 394,
+     "y": 1072,
+     "w": 653,
+     "h": 31
+    }
+   }
+  ],
+  "images": [
+   {
+    "selector": "#main > img",
+    "snippet": "<img src=\"assets/team.svg\" width=\"640\" height=\"360\" alt=\"Three people sketching a site map on a whiteboard\">",
+    "src": "https://fixture.test/assets/team.svg",
+    "alt": "Three people sketching a site map on a whiteboard",
+    "role": null,
+    "ariaHidden": false,
+    "ariaLabel": null,
+    "inLink": false,
+    "hasDimensions": true,
+    "naturalW": 640,
+    "naturalH": 360,
+    "renderedW": 640,
+    "renderedH": 360,
+    "loading": null,
+    "bbox": {
+     "x": 394,
+     "y": 404,
+     "w": 640,
+     "h": 360
+    },
+    "aboveFold": true,
+    "visible": true
+   }
+  ],
+  "imageCount": 1,
+  "links": [
+   {
+    "href": "https://fixture.test/good.html#main",
+    "rawHref": "#main",
+    "protocol": "http:",
+    "text": "Skip to content",
+    "accessibleName": "Skip to content",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > a.skip",
+    "snippet": "<a class=\"skip\" href=\"#main\">Skip to content</a>",
+    "visible": true,
+    "bbox": {
+     "x": -999,
+     "y": 8,
+     "w": 152,
+     "h": 45
+    }
+   },
+   {
+    "href": "https://fixture.test/",
+    "rawHref": "/",
+    "protocol": "http:",
+    "text": "Home",
+    "accessibleName": "Home",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "header > nav > ul > li:nth-of-type(1) > a",
+    "snippet": "<a href=\"/\">Home</a>",
+    "visible": true,
+    "bbox": {
+     "x": 394,
+     "y": 24,
+     "w": 64,
+     "h": 48
+    }
+   },
+   {
+    "href": "https://fixture.test/work",
+    "rawHref": "/work",
+    "protocol": "http:",
+    "text": "Work",
+    "accessibleName": "Work",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "header > nav > ul > li:nth-of-type(2) > a",
+    "snippet": "<a href=\"/work\">Work</a>",
+    "visible": true,
+    "bbox": {
+     "x": 474,
+     "y": 24,
+     "w": 58,
+     "h": 48
+    }
+   },
+   {
+    "href": "https://fixture.test/about",
+    "rawHref": "/about",
+    "protocol": "http:",
+    "text": "About",
+    "accessibleName": "About",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "header > nav > ul > li:nth-of-type(3) > a",
+    "snippet": "<a href=\"/about\">About</a>",
+    "visible": true,
+    "bbox": {
+     "x": 547,
+     "y": 24,
+     "w": 63,
+     "h": 48
+    }
+   },
+   {
+    "href": "https://fixture.test/contact",
+    "rawHref": "/contact",
+    "protocol": "http:",
+    "text": "Contact",
+    "accessibleName": "Contact",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "header > nav > ul > li:nth-of-type(4) > a",
+    "snippet": "<a href=\"/contact\">Contact</a>",
+    "visible": true,
+    "bbox": {
+     "x": 626,
+     "y": 24,
+     "w": 78,
+     "h": 48
+    }
+   },
+   {
+    "href": "https://fixture.test/contact",
+    "rawHref": "/contact",
+    "protocol": "http:",
+    "text": "Start a project",
+    "accessibleName": "Start a project",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "#main > p:nth-of-type(2) > a.cta",
+    "snippet": "<a class=\"cta\" href=\"/contact\">Start a project</a>",
+    "visible": true,
+    "bbox": {
+     "x": 394,
+     "y": 338,
+     "w": 169,
+     "h": 50
+    }
+   },
+   {
+    "href": "https://fixture.test/privacy",
+    "rawHref": "/privacy",
+    "protocol": "http:",
+    "text": "Privacy",
+    "accessibleName": "Privacy",
+    "internal": true,
+    "rel": null,
+    "target": null,
+    "selector": "body > footer > p > a",
+    "snippet": "<a href=\"/privacy\">Privacy</a>",
+    "visible": true,
+    "bbox": {
+     "x": 567,
+     "y": 1313,
+     "w": 52,
+     "h": 19
+    }
+   }
+  ],
+  "linkCount": 7,
+  "unlabeledControls": [],
+  "landmarks": {
+   "main": 1,
+   "nav": 1,
+   "header": 1,
+   "footer": 1
+  },
+  "skipLink": {
+   "found": true,
+   "selector": "body > a.skip"
+  },
+  "focus": {
+   "tested": 8,
+   "invisible": []
+  },
+  "smallText": {
+   "chars": 0,
+   "totalChars": 265,
+   "samples": []
+  },
+  "longLines": [],
+  "primaryAction": {
+   "checked": true,
+   "found": true,
+   "selector": "#main > p:nth-of-type(2) > a.cta",
+   "text": "Start a project"
+  },
+  "overlays": [],
+  "autoplay": [],
+  "renderBlocking": [],
+  "mixedContent": [],
+  "stackHints": [],
+  "domNodes": 49,
+  "textLength": 436
+ },
+ "brand": {
+  "sampled": 31,
+  "colors": [
+   {
+    "kind": "bg",
+    "hex": "#fbfaf7",
+    "interactive": false,
+    "weight": 1981.44,
+    "count": 1,
+    "key": "bg|#fbfaf7|0"
+   },
+   {
+    "kind": "bg",
+    "hex": "#0f3d3e",
+    "interactive": true,
+    "weight": 22.0214306640625,
+    "count": 3,
+    "key": "bg|#0f3d3e|1"
+   },
+   {
+    "kind": "text",
+    "hex": "#ffffff",
+    "interactive": true,
+    "weight": 39,
+    "count": 3,
+    "key": "text|#ffffff|1"
+   },
+   {
+    "kind": "text",
+    "hex": "#0f3d3e",
+    "interactive": true,
+    "weight": 27,
+    "count": 5,
+    "key": "text|#0f3d3e|1"
+   },
+   {
+    "kind": "text",
+    "hex": "#0f3d3e",
+    "interactive": false,
+    "weight": 35,
+    "count": 1,
+    "key": "text|#0f3d3e|0"
+   },
+   {
+    "kind": "text",
+    "hex": "#13201f",
+    "interactive": false,
+    "weight": 318,
+    "count": 7,
+    "key": "text|#13201f|0"
+   },
+   {
+    "kind": "bg",
+    "hex": "#ffffff",
+    "interactive": false,
+    "weight": 123.79583154296876,
+    "count": 2,
+    "key": "bg|#ffffff|0"
+   },
+   {
+    "kind": "border",
+    "hex": "#d9d6cf",
+    "interactive": false,
+    "weight": 14.955,
+    "count": 2,
+    "key": "border|#d9d6cf|0"
+   },
+   {
+    "kind": "bg",
+    "hex": "#ffffff",
+    "interactive": true,
+    "weight": 31.34175,
+    "count": 1,
+    "key": "bg|#ffffff|1"
+   },
+   {
+    "kind": "border",
+    "hex": "#6b6b6b",
+    "interactive": true,
+    "weight": 7.00953125,
+    "count": 1,
+    "key": "border|#6b6b6b|1"
+   }
+  ],
+  "fonts": [
+   {
+    "count": 6,
+    "family": "Georgia, \"Times New Roman\", serif",
+    "weight": 400,
+    "chars": 304,
+    "roles": {
+     "body": 304
+    },
+    "key": "Georgia, \"Times New Roman\", serif|400"
+   },
+   {
+    "count": 5,
+    "family": "Arial, Helvetica, sans-serif",
+    "weight": 400,
+    "chars": 33,
+    "roles": {
+     "ui": 33
+    },
+    "key": "Arial, Helvetica, sans-serif|400"
+   },
+   {
+    "count": 5,
+    "family": "Arial, Helvetica, sans-serif",
+    "weight": 700,
+    "chars": 82,
+    "roles": {
+     "heading": 58,
+     "body": 15,
+     "ui": 9
+    },
+    "key": "Arial, Helvetica, sans-serif|700"
+   }
+  ],
+  "sizes": [
+   {
+    "count": 2,
+    "tags": {
+     "p": 1,
+     "a": 1
+    },
+    "key": "16"
+   },
+   {
+    "count": 11,
+    "tags": {
+     "a": 6,
+     "p": 3,
+     "label": 1,
+     "button": 1
+    },
+    "key": "18"
+   },
+   {
+    "count": 2,
+    "tags": {
+     "h2": 2
+    },
+    "key": "24"
+   },
+   {
+    "count": 1,
+    "tags": {
+     "h1": 1
+    },
+    "key": "40"
+   }
+  ],
+  "spacing": [
+   {
+    "count": 23,
+    "key": "8"
+   },
+   {
+    "count": 25,
+    "key": "16"
+   },
+   {
+    "count": 18,
+    "key": "24"
+   },
+   {
+    "count": 3,
+    "key": "32"
+   }
+  ],
+  "radii": [
+   {
+    "count": 6,
+    "key": "8"
+   }
+  ],
+  "shadows": [],
+  "contrast": [
+   {
+    "count": 3,
+    "fg": "#ffffff",
+    "bg": "#0f3d3e",
+    "large": false,
+    "ratio": 11.95,
+    "chars": 39,
+    "selector": "body > a.skip",
+    "bbox": {
+     "x": -999,
+     "y": 8,
+     "w": 152,
+     "h": 45
+    },
+    "snippet": "<a class=\"skip\" href=\"#main\">Skip to content</a>",
+    "key": "#ffffff|#0f3d3e|0"
+   },
+   {
+    "count": 5,
+    "fg": "#0f3d3e",
+    "bg": "#fbfaf7",
+    "large": false,
+    "ratio": 11.45,
+    "chars": 27,
+    "selector": "header > nav > ul > li:nth-of-type(1) > a",
+    "bbox": {
+     "x": 394,
+     "y": 24,
+     "w": 64,
+     "h": 48
+    },
+    "snippet": "<a href=\"/\">Home</a>",
+    "key": "#0f3d3e|#fbfaf7|0"
+   },
+   {
+    "count": 1,
+    "fg": "#0f3d3e",
+    "bg": "#fbfaf7",
+    "large": true,
+    "ratio": 11.45,
+    "chars": 35,
+    "selector": "#main > h1",
+    "bbox": {
+     "x": 394,
+     "y": 152,
+     "w": 653,
+     "h": 96
+    },
+    "snippet": "<h1>Calm, fast websites for small teams</h1>",
+    "key": "#0f3d3e|#fbfaf7|1"
+   },
+   {
+    "count": 3,
+    "fg": "#13201f",
+    "bg": "#fbfaf7",
+    "large": false,
+    "ratio": 16.04,
+    "chars": 166,
+    "selector": "#main > p:nth-of-type(1)",
+    "bbox": {
+     "x": 394,
+     "y": 264,
+     "w": 653,
+     "h": 58
+    },
+    "snippet": "<p>We design and build websites that load quickly, read clearly and work for everyone, including people using keyboards and screen readers.</p>",
+    "key": "#13201f|#fbfaf7|0"
+   },
+   {
+    "count": 2,
+    "fg": "#13201f",
+    "bg": "#fbfaf7",
+    "large": true,
+    "ratio": 16.04,
+    "chars": 23,
+    "selector": "#main > h2:nth-of-type(1)",
+    "bbox": {
+     "x": 394,
+     "y": 796,
+     "w": 653,
+     "h": 31
+    },
+    "snippet": "<h2>What we do</h2>",
+    "key": "#13201f|#fbfaf7|1"
+   },
+   {
+    "count": 2,
+    "fg": "#13201f",
+    "bg": "#ffffff",
+    "large": false,
+    "ratio": 16.75,
+    "chars": 129,
+    "selector": "#main > div.card:nth-of-type(1) > p",
+    "bbox": {
+     "x": 419,
+     "y": 860,
+     "w": 603,
+     "h": 29
+    },
+    "snippet": "<p>Design systems that keep your brand consistent across every page.</p>",
+    "key": "#13201f|#ffffff|0"
+   }
+  ],
+  "contrastUnknown": 0,
+  "buttons": [
+   {
+    "count": 1,
+    "selector": "body > a.skip",
+    "text": "Skip to content",
+    "key": "#0f3d3e|#ffffff|0|8|16|18|400|0px"
+   },
+   {
+    "count": 2,
+    "selector": "#main > p:nth-of-type(2) > a.cta",
+    "text": "Start a project",
+    "key": "#0f3d3e|#ffffff|8|16|24|18|700|0px"
+   },
+   {
+    "count": 1,
+    "selector": "#email",
+    "text": "",
+    "key": "#ffffff|#000000|8|8|16|18|400|1px"
+   }
+  ],
+  "cssVars": {
+   "--color-ink": "#13201f",
+   "--color-paper": "#fbfaf7",
+   "--color-brand": "#0f3d3e",
+   "--color-accent": "#b4451f",
+   "--space-1": "8px",
+   "--space-2": "16px",
+   "--space-3": "24px",
+   "--space-4": "32px",
+   "--radius": "8px",
+   "--font-body": "Georgia, \"Times New Roman\", serif",
+   "--font-ui": "Arial, Helvetica, sans-serif"
+  },
+  "fontFaces": [],
+  "fontLinks": [],
+  "importsGoogle": false,
+  "assets": {
+   "logoUrl": null,
+   "favicon": "https://fixture.test/assets/favicon.svg",
+   "themeColor": "#0f3d3e",
+   "ogImage": "https://northwind.example/og.png"
+  },
+  "platformFonts": {
+   "Arial": "Arial",
+   "Georgia": "Georgia"
+  }
+ },
+ "mobile": {
+  "viewportW": 390,
+  "scrollWidth": 390,
+  "clipped": false,
+  "overflow": false,
+  "overflowOffenders": [],
+  "tapTargets": {
+   "checked": 8,
+   "below24": 0,
+   "below44": 0,
+   "samples": []
+  },
+  "viewportMeta": "width=device-width, initial-scale=1",
+  "docH": 1381,
+  "bodyFontPx": 18
+ },
+ "network": {
+  "requests": 3,
+  "transferBytes": 5536,
+  "byType": {
+   "document": {
+    "count": 1,
+    "bytes": 4844
+   },
+   "image": {
+    "count": 1,
+    "bytes": 692
+   },
+   "other": {
+    "count": 1,
+    "bytes": 0
+   }
+  },
+  "thirdParty": [],
+  "thirdPartyBytes": 0,
+  "imageFormats": {
+   "svg": 1
+  },
+  "uncompressed": [
+   {
+    "url": "https://fixture.test/good.html",
+    "bytes": 4844,
+    "type": "document"
+   }
+  ],
+  "largestImages": [
+   {
+    "url": "https://fixture.test/assets/team.svg",
+    "bytes": 692,
+    "mime": "image/svg+xml"
+   }
+  ],
+  "blockedRequests": 0,
+  "failedRequests": 0,
+  "capped": false
+ },
+ "axe": [],
+ "screenshots": {},
+ "timings": {
+  "load page": 33,
+  "wait for content": 911,
+  "read page structure": 35,
+  "accessibility checks": 797,
+  "mobile pass": 676,
+  "total": 2715
+ },
+ "reduced": false,
+ "notes": []
+}
