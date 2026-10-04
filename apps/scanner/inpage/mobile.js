@@ -64,27 +64,52 @@
   var small24 = 0;
   var small44 = 0;
   var checked = 0;
+  // Pass 1: visible targets with their boxes.
+  var boxes = [];
   for (var j = 0; j < cands.length && j < 600; j++) {
     var el = cands[j];
     var st = getComputedStyle(el);
-    if (st.display === 'none' || st.visibility === 'hidden') continue;
+    if (st.display === 'none' || st.visibility === 'hidden' || parseFloat(st.opacity) === 0) continue;
     var rr = el.getBoundingClientRect();
-    if (rr.width < 1 || rr.height < 1) continue;
+    // Visually hidden (sr-only / skip links before focus): 1-2px boxes or clipped away.
+    if (rr.width <= 2 || rr.height <= 2) continue;
+    if (/rect\(0(px)?,? 0(px)?,? 0(px)?,? 0(px)?\)/.test(st.clip) || /inset\((50|100)%/.test(st.clipPath)) continue;
+    if (rr.right <= 0 || rr.left >= vw) continue;
     // Inline links inside running text are exempt from target size (WCAG 2.5.8 exception).
     if (el.tagName === 'A' && st.display === 'inline' && el.parentElement && /^(P|LI|TD|DD|SPAN|BLOCKQUOTE|SMALL|LABEL)$/.test(el.parentElement.tagName)) {
       var ptxt = (el.parentElement.textContent || '').trim().length;
       if (ptxt > (el.textContent || '').trim().length + 5) continue;
     }
+    boxes.push({ el: el, r: rr });
+  }
+  // WCAG 2.5.8 spacing exception: an undersized target passes when a 24px square centred on it
+  // overlaps no other target.
+  function spaced(i) {
+    var r = boxes[i].r;
+    var cx = r.left + r.width / 2;
+    var cy = r.top + r.height / 2;
+    var a = { l: cx - 12, t: cy - 12, r: cx + 12, b: cy + 12 };
+    for (var k = 0; k < boxes.length; k++) {
+      if (k === i) continue;
+      var o = boxes[k];
+      if (o.el.contains(boxes[i].el) || boxes[i].el.contains(o.el)) continue;
+      var q = o.r;
+      if (q.left < a.r && q.right > a.l && q.top < a.b && q.bottom > a.t) return false;
+    }
+    return true;
+  }
+  for (var i2 = 0; i2 < boxes.length; i2++) {
+    var b2 = boxes[i2];
     checked++;
-    var w = rr.width;
-    var h = rr.height;
+    var w = b2.r.width;
+    var h = b2.r.height;
     if (w < 24 || h < 24) {
-      // WCAG 2.5.8 spacing exception: a 24px circle centred on the target must not overlap others.
+      if (spaced(i2)) continue;
       small24++;
-      if (targets.length < 30) targets.push({ selector: sel(el), w: Math.round(w), h: Math.round(h), level: 24, snippet: snip(el), bbox: box(rr) });
+      if (targets.length < 30) targets.push({ selector: sel(b2.el), w: Math.round(w), h: Math.round(h), level: 24, snippet: snip(b2.el), bbox: box(b2.r) });
     } else if (w < 44 || h < 44) {
       small44++;
-      if (targets.length < 30) targets.push({ selector: sel(el), w: Math.round(w), h: Math.round(h), level: 44, snippet: snip(el), bbox: box(rr) });
+      if (targets.length < 30) targets.push({ selector: sel(b2.el), w: Math.round(w), h: Math.round(h), level: 44, snippet: snip(b2.el), bbox: box(b2.r) });
     }
   }
 

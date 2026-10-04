@@ -8,7 +8,7 @@
   "transfer-encoding": "chunked",
   "cache-control": "no-cache",
   "content-type": "text/html; charset=utf-8",
-  "date": "Sun, 04 Oct 2026 14:53:05 GMT"
+  "date": "Sun, 04 Oct 2026 15:11:30 GMT"
  },
  "redirects": [],
  "rawHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Northwind Studio: calm, fast websites for small teams</title>\n  <meta name=\"description\" content=\"Northwind Studio designs and builds fast, accessible websites for small teams. See our work, our process and how to start a project.\">\n  <link rel=\"canonical\" href=\"/good.html\">\n  <meta property=\"og:title\" content=\"Northwind Studio\">\n  <meta property=\"og:description\" content=\"Fast, accessible websites for small teams.\">\n  <meta property=\"og:image\" content=\"https://northwind.example/og.png\">\n  <meta property=\"og:type\" content=\"website\">\n  <meta property=\"og:url\" content=\"/good.html\">\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n  <meta name=\"theme-color\" content=\"#0f3d3e\">\n  <link rel=\"icon\" href=\"assets/favicon.svg\" type=\"image/svg+xml\">\n  <script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"Northwind Studio\",\"url\":\"https://northwind.example/\"}</script>\n  <style>\n    :root {\n      --color-ink: #13201f;\n      --color-paper: #fbfaf7;\n      --color-brand: #0f3d3e;\n      --color-accent: #b4451f;\n      --space-1: 8px;\n      --space-2: 16px;\n      --space-3: 24px;\n      --space-4: 32px;\n      --radius: 8px;\n      --font-body: Georgia, \"Times New Roman\", serif;\n      --font-ui: Arial, Helvetica, sans-serif;\n    }\n    * { box-sizing: border-box; }\n    body { margin: 0; background: var(--color-paper); color: var(--color-ink); font: 18px/1.6 var(--font-body); }\n    .skip { position: absolute; left: -999px; top: 8px; background: var(--color-brand); color: #fff; padding: 8px 16px; }\n    .skip:focus { left: 8px; }\n    a { color: var(--color-brand); }\n    a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }\n    header, main, footer { max-width: 62ch; margin: 0 auto; padding: var(--space-3) var(--space-2); }\n    n",
@@ -631,7 +631,7 @@
   "overflow": false,
   "overflowOffenders": [],
   "tapTargets": {
-   "checked": 8,
+   "checked": 7,
    "below24": 0,
    "below44": 0,
    "samples": []
@@ -683,12 +683,12 @@
  "axe": [],
  "screenshots": {},
  "timings": {
-  "load page": 33,
-  "wait for content": 911,
-  "read page structure": 35,
-  "accessibility checks": 797,
-  "mobile pass": 676,
-  "total": 2715
+  "load page": 38,
+  "wait for content": 902,
+  "read page structure": 38,
+  "accessibility checks": 880,
+  "mobile pass": 695,
+  "total": 2832
  },
  "reduced": false,
  "notes": []

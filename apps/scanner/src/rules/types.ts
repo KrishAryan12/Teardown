@@ -8,6 +8,8 @@ export interface SiteSignals {
   sitemap: { found: boolean; url?: string } | null;
   /** HEAD/GET results for a capped sample of internal links. */
   linkChecks: { url: string; status: number; selector?: string }[];
+  /** Site mode: other scanned URLs that share this page's title. */
+  duplicateTitleOf?: string[];
 }
 
 export interface RuleContext {

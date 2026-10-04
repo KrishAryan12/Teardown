@@ -8,7 +8,7 @@ import type { NetworkSummary, PageFacts } from '../capture/types';
  *     requestPenalty  = min(20, max(0, requests - 60) / 4)
  *     blockingPenalty = min(20, 5 x render-blocking resources)
  *     domPenalty      = min(10, max(0, elements - 1500) / 300)
- *   estimate = round(0.5 x resource + 0.5 x categoryScore(performance rule groups))
+ *   estimate = round(0.7 x resource + 0.3 x categoryScore(performance rule groups))
  */
 export function estimatePerformance(network: NetworkSummary | null, facts: PageFacts | null, perfGroups: Pick<Group, 'worstSeverity' | 'count'>[]): number {
   const mb = (network?.transferBytes ?? 0) / 1024 / 1024;
@@ -22,5 +22,5 @@ export function estimatePerformance(network: NetworkSummary | null, facts: PageF
     Math.min(20, 5 * blocking) -
     Math.min(10, Math.max(0, dom - 1500) / 300);
   const rules = categoryScore(perfGroups.map((g) => ({ severity: g.worstSeverity, count: g.count })));
-  return Math.round(Math.max(0, Math.min(100, 0.5 * resource + 0.5 * rules)));
+  return Math.round(Math.max(0, Math.min(100, 0.7 * resource + 0.3 * rules)));
 }

@@ -321,12 +321,14 @@
 
   var skipLink = (function () {
     var focusables = doc.querySelectorAll('a[href], button, input, select, textarea, [tabindex]');
-    for (var i = 0; i < focusables.length && i < 3; i++) {
+    // Cookie banners often come first in the DOM, so look a little further than the very first link.
+    for (var i = 0; i < focusables.length && i < 10; i++) {
       var el = focusables[i];
       var h = el.getAttribute('href') || '';
       if (h.charAt(0) === '#' && h.length > 1) {
         var id = h.slice(1);
-        if (doc.getElementById(id) || doc.querySelector('[name="' + cssEscape(id) + '"]')) return { found: true, selector: selectorOf(el) };
+        var targetExists = doc.getElementById(id) || doc.querySelector('[name="' + cssEscape(id) + '"]');
+        if (targetExists || /skip|jump to|main content/i.test(el.textContent || '')) return { found: true, selector: selectorOf(el) };
       }
     }
     return { found: false };

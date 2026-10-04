@@ -33,3 +33,17 @@ HF now documents Docker Spaces as needing PRO to create. Some existing free acco
 **D-05. Markdown hardening.** All page-derived text in the agent brief is flattened to one line, Markdown-escaped, and selectors are placed in backtick-safe code spans. The brief tells the agent that quoted page text is data, not instructions.
 
 **D-06. Rules run on serialisable page facts.** One in-page script collects a `PageFacts` object; rules are pure functions of it. Rules are unit-testable without a browser, and the Chromium-down fallback fills the same `PageFacts` from static HTML (linkedom) with layout fields empty.
+
+**D-07. Rule de-duplication.** One concept is reported once. Our rules supersede overlapping axe rules (image-alt, html-has-lang, label, select-name, target-size, heading-order, page-has-heading-one, landmark-one-main, link-name, bypass). axe keeps color-contrast; the UX contrast rule only reports when axe didn't run. The SEO alt-text check is reported once, under accessibility (`a11y.img.alt`).
+
+**D-08. Spacing grid tries 8, 4, then 5px.** The brief says 4 and 8; GOV.UK (a reference-quality site) uses a 5px scale and was wrongly flagged as off-grid. *Alternative:* 4/8 only.
+
+**D-09. Tap targets apply the WCAG 2.5.8 spacing and inline exceptions** and skip visually hidden elements, after a real scan of gov.uk showed false positives.
+
+**D-10. Performance estimate** = 0.7 x resource score + 0.3 x performance rule score (see RULES.md). Weighted towards measured bytes/requests so a heavy page can't score well on rules alone.
+
+**D-11. Lighthouse 13 "insight" audits** are mapped onto our rules where they overlap (image-delivery, render-blocking, document-latency, viewport); bare diagnostics such as bf-cache are skipped.
+
+**D-12. AI defaults (pre-eval).** Gemini `gemini-3.5-flash-lite,gemini-3.1-flash-lite` with `reasoning_effort: none` (dropped automatically if rejected); Groq `llama-3.1-8b-instant`; HF `meta-llama/Llama-3.1-8B-Instruct:cheapest` (verified on the router at $0.02/$0.05 per M tokens); OpenRouter `google/gemma-4-26b-a4b-it:free,google/gemma-4-31b-it:free` (verified in the live :free list, both support response_format). **`pnpm ai:eval` has not been run yet: no provider keys are available locally.** Defaults must be confirmed from eval results once keys are added.
+
+**D-13. AI output hardening.** Unknown group ids are discarded, ranks renumbered, skipped groups appended deterministically, rationale capped at 20 words and instructions at ~50, off-site links and markup stripped. Invalid output gets one "valid JSON only" retry, then the chain advances. Circuit breaker: 429 = 30 min, 401/402/403/404/retired = 6 h, two invalid replies in a row = 30 min.

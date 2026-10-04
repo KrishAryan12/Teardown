@@ -25,7 +25,7 @@ The performance score is the engine score: PageSpeed Insights (if `PSI_API_KEY` 
 ```
 resource = 100 - min(50, 10 x max(0, MB - 1)) - min(20, max(0, requests - 60) / 4)
                - min(20, 5 x render-blocking resources) - min(10, max(0, elements - 1500) / 300)
-estimate = round(0.5 x resource + 0.5 x categoryScore(performance rule groups))
+estimate = round(0.7 x resource + 0.3 x categoryScore(performance rule groups))
 ```
 
 In site mode the engine runs on the home page plus up to `PERF_MAX_PAGES_FULL` pages; the report score is their mean.
@@ -47,7 +47,7 @@ One concept is reported once. Where our own rule and axe-core overlap, our rule 
 - axe rules skipped: `bypass`, `heading-order`, `html-has-lang`, `html-lang-valid`, `image-alt`, `label`, `landmark-one-main`, `link-name`, `no-autoplay-audio`, `page-has-heading-one`, `select-name`, `target-size`.
 - `color-contrast` stays with axe (accessibility). The UX contrast rule only reports from brand extraction when axe did not run.
 - The SEO "image alt" check is reported once, as `a11y.img.alt` (accessibility), because it is the same fix.
-- Lighthouse audits covered by our rules (we keep ours): `target-size` → `ux.tap-target.small`, `unsized-images` → `ux.img.dimensions`, `total-byte-weight` → `perf.weight.total`, `uses-text-compression` → `perf.text.uncompressed`, `modern-image-formats` → `perf.img.format`, `uses-optimized-images` → `perf.img.format`, `uses-responsive-images` → `perf.img.oversized`, `render-blocking-resources` → `perf.render-blocking`, `render-blocking-insight` → `perf.render-blocking`, `third-party-summary` → `perf.third-party.heavy`, `third-parties-insight` → `perf.third-party.heavy`, `dom-size` → `perf.dom.large`, `dom-size-insight` → `perf.dom.large`.
+- Lighthouse audits covered by our rules (we keep ours): `viewport` → `seo.viewport.missing`, `viewport-insight` → `seo.viewport.missing`, `target-size` → `ux.tap-target.small`, `unsized-images` → `ux.img.dimensions`, `total-byte-weight` → `perf.weight.total`, `uses-text-compression` → `perf.text.uncompressed`, `document-latency-insight` → `perf.text.uncompressed`, `modern-image-formats` → `perf.img.format`, `uses-optimized-images` → `perf.img.format`, `image-delivery-insight` → `perf.img.format`, `uses-responsive-images` → `perf.img.oversized`, `render-blocking-resources` → `perf.render-blocking`, `render-blocking-insight` → `perf.render-blocking`, `third-party-summary` → `perf.third-party.heavy`, `third-parties-insight` → `perf.third-party.heavy`, `dom-size` → `perf.dom.large`, `dom-size-insight` → `perf.dom.large`.
 
 ## SEO
 
@@ -58,6 +58,7 @@ One concept is reported once. Where our own rule and axe-core overlap, our rule 
 | `seo.title.missing` | serious | **Page has no title.** There is no <title> element. Search results and browser tabs show the URL instead of a name. | Add a unique, descriptive <title> of 30-60 characters inside <head>. (effort xs) | The page has exactly one non-empty <title> of 30-60 characters. |
 | `seo.title.short` | moderate | **Title is too short.** The title is too short to describe the page. Search engines may rewrite it, and it wastes the most visible line in results. | Expand the title to 30-60 characters: page topic first, brand last. (effort xs) | The <title> is 30-60 characters and describes the page topic. |
 | `seo.title.long` | minor | **Title is too long.** Search results cut titles off at around 60 characters, so the end of this one will be hidden. | Shorten the title to 60 characters or fewer, keeping the key words first. (effort xs) | The <title> is 60 characters or fewer. |
+| `seo.title.duplicate` | moderate | **Several pages share the same title.** Pages with identical titles look like duplicates to search engines and are hard to tell apart in tabs and results. | Give every page a unique title that names its own topic. (effort s) | No two scanned pages have the same <title>. |
 | `seo.meta-description.missing` | moderate | **Meta description is missing.** Without a meta description, search engines pick a snippet from the page, which is often a menu or cookie notice. | Add a meta description of 70-160 characters that summarises the page and invites the click. (effort xs) | The page has one <meta name="description"> with 70-160 characters. |
 | `seo.meta-description.length` | minor | **Meta description length is off.** The meta description is very short or long enough to be cut off in search results. | Rewrite the meta description to 70-160 characters. (effort xs) | The meta description is 70-160 characters long. |
 | `seo.h1.missing` | moderate | **Page has no main heading (h1).** There's no visible <h1>. Screen reader users and search engines use it to understand what the page is about. | Mark up the main page heading as a single visible <h1>. (effort xs) | The page has exactly one visible <h1> with text. |

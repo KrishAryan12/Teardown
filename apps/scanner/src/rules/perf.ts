@@ -46,7 +46,7 @@ export const perfRules: Rule[] = [
     severity: 'moderate',
     title: 'Text files sent without compression',
     detail: 'HTML, CSS, JavaScript or SVG files are sent uncompressed. Gzip or Brotli typically cuts them by 70% or more.',
-    supersedesLighthouse: ['uses-text-compression'],
+    supersedesLighthouse: ['uses-text-compression', 'document-latency-insight'],
     fix: {
       summary: 'Enable Brotli or gzip compression for text responses on the server or CDN.',
       steps: ['Turn on compression in the host/CDN settings, or in the web server (e.g. nginx `gzip on; brotli on;`).', 'Include text/html, text/css, application/javascript, image/svg+xml and application/json.'],
@@ -62,7 +62,7 @@ export const perfRules: Rule[] = [
     severity: 'moderate',
     title: 'Large images in old formats',
     detail: 'Large images are served as PNG or JPEG. WebP or AVIF are usually 30-60% smaller at the same quality.',
-    supersedesLighthouse: ['modern-image-formats', 'uses-optimized-images'],
+    supersedesLighthouse: ['modern-image-formats', 'uses-optimized-images', 'image-delivery-insight'],
     fix: {
       summary: 'Serve large images as AVIF or WebP (with a JPEG fallback if needed) and compress them.',
       steps: ['Convert the listed images (e.g. with Squoosh, sharp or your image CDN).', 'Use <picture> with type="image/avif" and "image/webp" sources, or an image component that negotiates formats.'],

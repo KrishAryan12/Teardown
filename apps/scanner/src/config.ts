@@ -49,7 +49,7 @@ export const EnvSchema = z.object({
   HF_MODELS: list('meta-llama/Llama-3.1-8B-Instruct:cheapest'),
   HF_BASE_URL: z.string().optional().default('https://router.huggingface.co/v1'),
   OPENROUTER_API_KEY: optionalSecret,
-  OPENROUTER_MODELS: list('meta-llama/llama-3.3-8b-instruct:free'),
+  OPENROUTER_MODELS: list('google/gemma-4-26b-a4b-it:free,google/gemma-4-31b-it:free'),
   OPENROUTER_BASE_URL: z.string().optional().default('https://openrouter.ai/api/v1'),
   AI_DAILY_CALLS: int(400),
   AI_DAILY_CALLS_GEMINI: int(200),

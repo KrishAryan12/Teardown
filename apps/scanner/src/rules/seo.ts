@@ -75,7 +75,8 @@ export const seoRules: Rule[] = [
     },
     check: ({ capture }) => {
       const t = capture.facts.head.title;
-      return !!t && t.length < 25 && { measured: `${t.length} characters ("${t.slice(0, 40)}")`, expected: '30-60 characters' };
+      if (!t || t.length >= 30) return null;
+      return { measured: `${t.length} characters ("${t.slice(0, 40)}")`, expected: '30-60 characters', severity: t.length < 15 ? 'moderate' : 'minor' };
     },
   },
   {
@@ -94,6 +95,25 @@ export const seoRules: Rule[] = [
       const t = capture.facts.head.title;
       return t.length > 65 && { measured: `${t.length} characters`, expected: '<= 60 characters' };
     },
+  },
+  {
+    id: 'seo.title.duplicate',
+    category: 'seo',
+    severity: 'moderate',
+    title: 'Several pages share the same title',
+    detail: 'Pages with identical titles look like duplicates to search engines and are hard to tell apart in tabs and results.',
+    fix: {
+      summary: 'Give every page a unique title that names its own topic.',
+      steps: ['Generate titles from each page’s own heading or content in your layout.', 'Keep the brand suffix, but make the first part unique.'],
+      effort: 's',
+      acceptance: ['No two scanned pages have the same <title>.'],
+    },
+    check: ({ site, capture }) =>
+      !!site.duplicateTitleOf?.length && {
+        measured: `"${capture.facts.head.title.slice(0, 60)}" also on ${site.duplicateTitleOf.length} other page(s)`,
+        expected: 'unique title',
+        detail: `Same title as: ${site.duplicateTitleOf.slice(0, 5).join(', ')}`.slice(0, 1900),
+      },
   },
   {
     id: 'seo.meta-description.missing',
@@ -241,6 +261,7 @@ export const seoRules: Rule[] = [
     id: 'seo.viewport.missing',
     category: 'seo',
     severity: 'serious',
+    supersedesLighthouse: ['viewport', 'viewport-insight'],
     title: 'No mobile viewport tag',
     detail: 'Without a viewport meta tag, phones render the page at desktop width and shrink it. Search engines treat it as not mobile-friendly.',
     fix: {

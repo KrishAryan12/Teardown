@@ -119,10 +119,13 @@ export function processBrand(raws: BrandRaw[]): BrandAnalysis {
         .filter(([, n]) => n / f.chars > 0.15)
         .sort((a, b) => b[1] - a[1])
         .map(([r]) => r);
-      const rendered = raw.platformFonts?.[family];
+      const source = fontSource(family, raw);
+      // CDP names for web fonts are internal font names (often garbage); only useful for system fallbacks.
+      const renderedRaw = raw.platformFonts?.[family];
+      const rendered = (source === 'system' || source === 'unknown') && renderedRaw && /^[\w .&'-]{2,60}$/.test(renderedRaw) ? renderedRaw : undefined;
       return {
         family,
-        source: fontSource(family, raw),
+        source,
         weights: [...f.weights].sort((a, b) => a - b),
         usedFor: usedFor.length ? usedFor : (['body'] as FontUse[]),
         fallbackStack: f.stack.slice(0, 300),
@@ -144,10 +147,12 @@ export function processBrand(raws: BrandRaw[]): BrandAnalysis {
   const onGrid = (u: number) => spacingValues.filter((v) => Math.abs(v.px / u - Math.round(v.px / u)) < 0.06 || v.px === 1 || v.px === 2).reduce((s, v) => s + v.count, 0) / spacingTotal;
   const r8 = onGrid(8);
   const r4 = onGrid(4);
-  const baseUnit = r8 >= 0.8 ? 8 : r4 >= 0.75 ? 4 : undefined;
+  const r5 = onGrid(5);
+  // 8 and 4 first (most systems), then 5 (e.g. GOV.UK's scale).
+  const baseUnit = r8 >= 0.8 ? 8 : r4 >= 0.75 ? 4 : r5 >= 0.75 ? 5 : undefined;
   const spacing = {
     ...(baseUnit ? { baseUnit } : {}),
-    onGridRatio: Math.round((baseUnit === 8 ? r8 : r4) * 100) / 100,
+    onGridRatio: Math.round((baseUnit === 8 ? r8 : baseUnit === 5 ? r5 : r4) * 100) / 100,
     values: spacingValues.sort((a, b) => b.count - a.count).slice(0, 24).sort((a, b) => a.px - b.px),
   };
 
@@ -204,7 +209,7 @@ export function processBrand(raws: BrandRaw[]): BrandAnalysis {
   const notes: string[] = [];
   if (fonts.length > 3) notes.push(`${fonts.length} font families in use; most systems need 2 or 3.`);
   if (nearDuplicates.length >= 2) notes.push(`${nearDuplicates.length} pairs of colours are near-duplicates and could be merged.`);
-  if (!baseUnit) notes.push(`Spacing doesn't follow a 4 or 8px grid (${Math.round(r4 * 100)}% of values are multiples of 4).`);
+  if (!baseUnit) notes.push(`Spacing doesn't follow a 4, 5 or 8px grid (${Math.round(r4 * 100)}% of values are multiples of 4).`);
   if (typeScaleRatio) notes.push(`Type sizes roughly follow a ${typeScaleRatio.toFixed(3)} ratio${ratioName(typeScaleRatio)}.`);
   if (Object.keys(cssVariables).length === 0) notes.push('No CSS custom properties (design tokens) were found on :root.');
   if (buttonVariants.length > 3) notes.push(`${buttonVariants.length} different button styles were found.`);

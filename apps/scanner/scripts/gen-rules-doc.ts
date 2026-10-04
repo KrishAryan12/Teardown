@@ -29,7 +29,7 @@ lines.push('The performance score is the engine score: PageSpeed Insights (if `P
 lines.push('```');
 lines.push('resource = 100 - min(50, 10 x max(0, MB - 1)) - min(20, max(0, requests - 60) / 4)');
 lines.push('               - min(20, 5 x render-blocking resources) - min(10, max(0, elements - 1500) / 300)');
-lines.push('estimate = round(0.5 x resource + 0.5 x categoryScore(performance rule groups))');
+lines.push('estimate = round(0.7 x resource + 0.3 x categoryScore(performance rule groups))');
 lines.push('```', '');
 lines.push('In site mode the engine runs on the home page plus up to `PERF_MAX_PAGES_FULL` pages; the report score is their mean.', '');
 lines.push('### Deterministic priority (AI fallback)', '');
