@@ -97,7 +97,7 @@ export function BenchLog({ state, onCancel }: { state: Active; onCancel: () => v
         {pages.length > 0 && (
           <>
             <h2 className="label" style={{ margin: '20px 0 8px', fontFamily: 'var(--font-mono)', fontWeight: 400 }}>
-              Pages ({pages.filter((p) => p.done).length} of {pages.find((p) => p.total)?.total ?? pages.length})
+              Pages ({pages.filter((p) => p.done).length} of {Math.max(pages.length, ...pages.map((p) => p.total ?? 0))})
             </h2>
             <ol aria-live="polite">
               {pages.map((p) => (

@@ -145,7 +145,8 @@ export async function runScan(req: { url: string; mode: ScanMode }, d: ScanDeps,
   };
 
   /* 4. Primary page */
-  const first = await capture(target.href, 0, 1).then((c) => finishPage(c, 0));
+  // total 0 = not known yet (discovery runs after the home page).
+  const first = await capture(target.href, 0, 0).then((c) => finishPage(c, 0));
   const pages: Captured[] = [first];
   let pagesSkipped = 0;
   let truncated = false;

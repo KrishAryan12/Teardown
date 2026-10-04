@@ -41,7 +41,9 @@ export async function startFixtureServer(root = FIXTURES_DIR): Promise<FixtureSe
     try {
       const s = await stat(file);
       if (s.isDirectory()) file = join(file, 'index.html');
-      const body = await readFile(file);
+      let body: Buffer | string = await readFile(file);
+      // Sitemaps and robots.txt need absolute URLs; the port is only known at runtime.
+      if (/\.(xml|txt)$/.test(file)) body = body.toString('utf8').replaceAll('{{origin}}', `http://127.0.0.1:${(server.address() as AddressInfo).port}`);
       res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream', 'cache-control': 'no-cache' });
       res.end(req.method === 'HEAD' ? undefined : body);
     } catch {
