@@ -121,9 +121,13 @@ Teardown deploys as **one Vercel project**. The site is pre-rendered, and the sc
    | `UPSTASH_REDIS_REST_URL` / `_TOKEN` | Rate limits and budgets shared across instances | Upstash free tier |
    | `CONTACT_URL` | The contact link in the `TeardownBot` user agent | — |
 
-3. Deploy, then run `pnpm health https://your-app.vercel.app` to smoke-test health, quota and SSRF refusals.
+3. Deploy, then validate it end to end:
 
-Would you rather run a long-lived server? The same scanner ships as a Fastify app in Docker. See [docs/DEPLOY.md](docs/DEPLOY.md).
+   ```bash
+   pnpm health https://your-app.vercel.app --scan https://example.com
+   ```
+
+The full guide covers function settings, validation and troubleshooting: [docs/DEPLOY.md](docs/DEPLOY.md). The scanner can also run as a long-lived Fastify server in Docker; see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#two-deployment-modes).
 
 ## Use the agent brief
 
@@ -168,7 +172,7 @@ pnpm --filter @teardown/web dev     # site + /api scanner on http://localhost:30
 | `pnpm sample:generate` | Rebuilds the landing-page sample report |
 | `pnpm --filter @teardown/scanner exec tsx scripts/scan.ts <url> [--site]` | Scan from the command line |
 | `pnpm --filter @teardown/scanner dev` | Standalone Fastify scanner on :7860 (Docker mode) |
-| `pnpm health [url]` | Smoke test: health, quota and SSRF refusals |
+| `pnpm health [url] [--scan <site>]` | Smoke test: health, quota, SSRF refusals and optionally one real scan |
 | `pnpm --filter @teardown/web test:a11y` | axe and keyboard checks on the built site |
 
 To scan local fixtures, set `ALLOW_PRIVATE_TARGETS=true`. The scanner refuses to start with it when `NODE_ENV=production`.

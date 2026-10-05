@@ -22,7 +22,7 @@ Newest entries are appended at the end of each section.
 ## Decisions
 
 **D-01. Scanner hosting: keep HF Spaces as the documented target, keep the container portable.**
-HF now documents Docker Spaces as needing PRO to create. Some existing free accounts can still create them and the policy may differ by account, so the deploy path from the brief stays (`scripts/build-space.sh`, `deploy-scanner.yml`). The container listens on `$PORT` (default 7860), so the same image runs on any free container host. `docs/DEPLOY.md` lists a fallback (Render free web service via its Docker runtime: 512 MB RAM is tight for Chromium, so run with `MAX_CONCURRENT_SCANS=1` and `PERF_ENGINE=estimate` or `psi`). *Alternative:* switching the brief's target outright; rejected because the owner chose HF and may be able to use it.
+HF now documents Docker Spaces as needing PRO to create. Some existing free accounts can still create them and the policy may differ by account, so the deploy path from the brief stays (`scripts/build-space.sh`, `deploy-scanner.yml`). The container listens on `$PORT` (default 7860), so the same image runs on any free container host. A fallback was listed at the time (Render free web service via its Docker runtime: 512 MB RAM is tight for Chromium, so run with `MAX_CONCURRENT_SCANS=1` and `PERF_ENGINE=estimate` or `psi`). *Alternative:* switching the brief's target outright; rejected because the owner chose HF and may be able to use it.
 
 **D-02. Monorepo tooling.** pnpm workspaces, TypeScript everywhere, ESM. `packages/core` is consumed as TypeScript source (no build step) by vitest, Next (`transpilePackages`) and esbuild. *Alternative:* building core to `dist` with project references; more moving parts for no benefit.
 
