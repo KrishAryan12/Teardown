@@ -14,7 +14,7 @@ Paste a URL. Teardown loads it in a real browser and hands back a prioritised fi
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.0-0D2B4B.svg)
 ![Free to run](https://img.shields.io/badge/runs%20on-free%20tiers-6FD6A8.svg)
 
-[**Sample report**](apps/web/public/sample/report.json) · [**Watch the video (MP4)**](docs/launch.mp4) · [**Deploy your own**](#deploy-your-own) · [**How it works**](#how-it-works)
+[**Try it live**](https://teardown-lab.vercel.app) · [**Sample report**](https://teardown-lab.vercel.app/sample) · [**Watch the video (MP4)**](docs/launch.mp4) · [**Deploy your own**](#deploy-your-own) · [**How it works**](#how-it-works)
 
 </div>
 

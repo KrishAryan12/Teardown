@@ -10,7 +10,7 @@ const publicSans = Public_Sans({ subsets: ['latin'], weight: ['400', '600', '700
 // Mono is never in the first paint, so it isn't preloaded.
 const martian = Martian_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-martian', display: 'swap', preload: false });
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://teardown.vercel.app';
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://teardown-lab.vercel.app';
 const DESCRIPTION =
   'Paste a URL and Teardown takes the site apart in a real browser: performance, SEO, accessibility and UX checks, its brand system, and a prioritised fix list you can hand to an AI coding agent.';
 

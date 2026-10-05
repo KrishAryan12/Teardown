@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://teardown.vercel.app/sitemap.xml
+Sitemap: https://teardown-lab.vercel.app/sitemap.xml
