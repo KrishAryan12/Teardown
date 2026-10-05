@@ -108,9 +108,9 @@ More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Teardown deploys as **one Vercel project**. The site is pre-rendered, and the scanner runs as Vercel Functions with serverless Chromium. Nothing needs a credit card.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKrishAryan12%2FTeardown&root-directory=apps%2Fweb)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKrishAryan12%2FTeardown)
 
-1. Import the repo with **Root Directory** set to `apps/web`.
+1. Import the repo and leave **Root Directory** at the repository root. The root `vercel.json` routes everything to the `web` service (`apps/web`).
 2. Add any of these environment variables. They're all optional, and each one switches on a better path:
 
    | Variable | Unlocks | Free source |

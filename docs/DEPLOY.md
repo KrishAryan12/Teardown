@@ -48,7 +48,7 @@ If no AI provider answers, the report uses the built-in order and fix templates 
    | Setting | Value |
    |---|---|
    | Framework Preset | Next.js (detected) |
-   | **Root Directory** | `apps/web` |
+   | **Root Directory** | Leave it at the repository root (`./`). The root `vercel.json` defines one service, `web`, rooted at `apps/web` |
    | Build / Output / Install commands | Leave the defaults |
 
 4. Open **Environment Variables** and add these for **Production** and **Preview**:
@@ -82,7 +82,7 @@ From now on, every push to `main` deploys to production and every pull request g
 npm i -g vercel
 vercel login
 vercel link                 # from the repo root; pick or create the project
-# In the dashboard: Settings → Build and Deployment → Root Directory = apps/web
+# Root Directory stays at the repo root; vercel.json points the web service at apps/web
 vercel env add UPSTASH_REDIS_REST_URL production     # repeat for each variable
 vercel deploy --prod
 ```
@@ -98,8 +98,8 @@ One scan runs inside one function call. `POST /api/scan/stream` admits the reque
 | Where (Project → Settings) | Setting | Why |
 |---|---|---|
 | **Functions → Fluid Compute** | **Enabled** (the default for new projects) | Without it, Hobby functions stop at 60 s and longer scans fail with `FUNCTION_INVOCATION_TIMEOUT` |
-| **Functions → Function Region** | **Washington, D.C., USA (iad1)** | Pinned by `apps/web/vercel.json` so the functions sit next to Upstash us-east-1 |
-| **Build and Deployment → Root Directory** | `apps/web`, with **Include files outside the root directory** turned on | The app imports `apps/scanner` and `packages/core` from the monorepo |
+| **Functions → Function Region** | **Washington, D.C., USA (iad1)** (the default) | Keeps the functions next to Upstash us-east-1 |
+| **Build and Deployment → Root Directory** | The repository root (empty or `./`) | The root `vercel.json` uses Vercel Services: one service, `web` (`apps/web`, Next.js), receives every request through a catch-all rewrite. The app imports `apps/scanner` and `packages/core` from the monorepo |
 | **Build and Deployment → Node.js Version** | `22.x` or `24.x` | Both meet the `>=22.19` engine requirement |
 
 ### 3.2 What each function does
@@ -213,7 +213,8 @@ You'll see `event: started`, then a series of `event: step` frames, `event: ai_s
 | Symptom | Cause and fix |
 |---|---|
 | The build fails during install with pnpm errors | Add `ENABLE_EXPERIMENTAL_COREPACK=1` (step 2.4) and redeploy |
-| The build fails with "Cannot find module '@teardown/…'" | **Include files outside the root directory** is off (step 3.1) |
+| The build fails with "Cannot find module '@teardown/…'" | The workspace packages weren't installed. Check that Root Directory is the repository root (step 3.1) and that the install step ran `pnpm install` at the root |
+| Vercel asks you to configure services, or every page returns 404 | The root `vercel.json` is missing, or Root Directory points at `apps/web`, so Vercel never reads it. Set Root Directory back to the repository root |
 | `FUNCTION_INVOCATION_TIMEOUT` after exactly 60 s | Fluid Compute is off, so `maxDuration = 300` isn't honoured (step 3.1) |
 | The scan finishes but says **reduced accuracy**, with `screenshots 0` | Chromium couldn't launch, so the HTML-only fallback ran. Check the function logs for the launch error. The usual cause is a missing `@sparticuz/chromium/bin` in the bundle, so confirm `outputFileTracingIncludes` in `apps/web/next.config.ts` is intact |
 | `perf estimated` although `PSI_API_KEY` is set | The key is restricted to the wrong API, or the variable was added after the last deploy. Environment variable changes only apply to new deployments, so redeploy |
