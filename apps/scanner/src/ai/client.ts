@@ -14,7 +14,7 @@ export interface ChatRequest {
   temperature: number;
   timeoutMs: number;
   jsonMode: boolean;
-  /** Provider-specific extras, e.g. { reasoning_effort: 'none' } for Gemini. */
+  /** Provider-specific extras, e.g. { reasoning_effort: 'minimal' } for Gemini. */
   extra?: Record<string, unknown>;
   headers?: Record<string, string>;
   fetchImpl?: typeof fetch;
@@ -38,7 +38,8 @@ export class ProviderError extends Error {
 
   /** The request shape was rejected (unsupported param such as response_format or reasoning_effort). */
   get unsupportedParam(): boolean {
-    return this.status === 400 && /response_format|json_object|reasoning|unsupported|not support|unknown (field|parameter)|invalid.*param/i.test(this.body);
+    // Some providers (Gemini) answer a bad optional param with a bare INVALID_ARGUMENT.
+    return this.status === 400 && /response_format|json_object|reasoning|unsupported|not support|unknown (field|parameter)|invalid.*param|INVALID_ARGUMENT|invalid argument/i.test(this.body);
   }
 
   get modelGone(): boolean {

@@ -31,9 +31,11 @@ export function providersFromConfig(cfg: Config): ProviderDef[] {
       models: cfg.GEMINI_MODELS,
       dailyCap: cfg.AI_DAILY_CALLS_GEMINI,
       // Thinking tokens are wasted on this task; disable where the model allows it.
-      extra: { reasoning_effort: 'none' },
+      // Gemini 3 models can't switch reasoning off ('none' is rejected); 'minimal' keeps it short.
+      extra: { reasoning_effort: 'minimal' },
     },
-    groq: { name: 'groq', baseUrl: cfg.GROQ_BASE_URL, apiKey: cfg.GROQ_API_KEY, models: cfg.GROQ_MODELS, dailyCap: cfg.AI_DAILY_CALLS_GROQ },
+    // gpt-oss on Groq reasons before answering; 'low' keeps it brief (dropped automatically for models that reject it).
+    groq: { name: 'groq', baseUrl: cfg.GROQ_BASE_URL, apiKey: cfg.GROQ_API_KEY, models: cfg.GROQ_MODELS, dailyCap: cfg.AI_DAILY_CALLS_GROQ, extra: { reasoning_effort: 'low' } },
     huggingface: { name: 'huggingface', baseUrl: cfg.HF_BASE_URL, apiKey: cfg.HF_TOKEN, models: cfg.HF_MODELS, dailyCap: cfg.AI_DAILY_CALLS_HUGGINGFACE },
     openrouter: {
       name: 'openrouter',
@@ -112,7 +114,8 @@ export class AiChain implements AiService {
       apiKey: p.apiKey!,
       model,
       messages: buildMessages(input, nudge),
-      maxTokens: 1400,
+      // Headroom for reasoning tokens, which count against max_tokens on reasoning models.
+      maxTokens: 2048,
       temperature: 0.2,
       timeoutMs: this.cfg.AI_TIMEOUT_MS,
       jsonMode: !dropped.has('response_format'),

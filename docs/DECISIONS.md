@@ -87,3 +87,19 @@ HF now documents Docker Spaces as needing PRO to create. Some existing free acco
 **D-31. Chromium on Vercel** is `@sparticuz/chromium` 153 (x64) driven by `playwright` 1.63 with an explicit `executablePath`. It only runs on Linux x64, so its first real run is on Vercel; locally the same code path uses Playwright's Chromium. The SSRF proxy runs in-process in the function, unchanged.
 
 **D-32. Static export dropped.** Route handlers need a server build; the pages are still pre-rendered. CI builds the Next app and runs axe and Lighthouse CI against `next start`; the mock scanner is gone because `/api/health` and `/api/quota` work in CI with in-memory limits.
+
+**D-33. AI defaults chosen from `pnpm ai:eval` (2026-10-05, owner's real keys, 3 runs × 2 fixtures).** Supersedes the pre-eval defaults in D-12.
+
+| Provider | Model | Usable | JSON valid | Invalid ids / reply | Median latency | Notes |
+|---|---|---|---|---|---|---|
+| Gemini | `gemini-3.5-flash-lite` | 6/6 | 100% | 0.00 | 4.9 s | **First choice.** Rejected `reasoning_effort: "none"` (HTTP 400, Gemini 3 can't disable reasoning); fine with `"minimal"`. |
+| Gemini | `gemini-3.1-flash-lite` | 4/6 | 100% | 0.00 | 8.3 s | Second; two transient 503s |
+| Gemini | `gemini-flash-lite-latest` | 6/6 | 86% | 0.00 | 4.6 s | Third; auto-tracks the current Flash-Lite, so retirements don't break the chain |
+| Groq | `openai/gpt-oss-20b` | 3/6 | 100% | 0.67 | 1.8 s | Fastest; 429s came from the eval exceeding Groq's per-minute token cap, not from normal traffic. `llama-3.1-8b-instant` is **retired** (404). |
+| Groq | `qwen/qwen3.8-27b` | 1/6 | 100% | 0.00 | 3.5 s | Rejects `reasoning_effort: "low"`; the client drops it and retries |
+| HF router | `meta-llama/Llama-3.1-8B-Instruct:cheapest` | 5/6 | 100% | 1.00 | 26 s | Reliable but slow, invents about one group id per reply (discarded by validation) |
+| OpenRouter | `google/gemma-4-26b-a4b-it:free`, `gemma-4-31b-it:free` | 0/4 | — | — | — | HTTP 429 (shared free capacity / 50-per-day limit); kept as last resort behind the circuit breaker |
+
+Changes made from these results: Gemini `reasoning_effort` `none` → `minimal`; Groq defaults → `openai/gpt-oss-20b,qwen/qwen3.8-27b` with `reasoning_effort: low`; `max_tokens` 1400 → 2048 because reasoning tokens count against it (Gemini 3.1 had truncated JSON at 1400); a bare `INVALID_ARGUMENT` 400 now triggers the drop-optional-params retry.
+
+A live scan of gov.uk through the production build (PSI + Gemini + Upstash) took 37 s: performance from PageSpeed Insights, advice from Gemini, limits and budgets recorded in Upstash.

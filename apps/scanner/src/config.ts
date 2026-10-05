@@ -40,10 +40,10 @@ export const EnvSchema = z.object({
   // AI
   AI_PROVIDERS: list('gemini,groq,huggingface,openrouter'),
   GEMINI_API_KEY: optionalSecret,
-  GEMINI_MODELS: list('gemini-3.5-flash-lite,gemini-3.1-flash-lite'),
+  GEMINI_MODELS: list('gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest'),
   GEMINI_BASE_URL: z.string().optional().default('https://generativelanguage.googleapis.com/v1beta/openai'),
   GROQ_API_KEY: optionalSecret,
-  GROQ_MODELS: list('llama-3.1-8b-instant'),
+  GROQ_MODELS: list('openai/gpt-oss-20b,qwen/qwen3.8-27b'),
   GROQ_BASE_URL: z.string().optional().default('https://api.groq.com/openai/v1'),
   HF_TOKEN: optionalSecret,
   HF_MODELS: list('meta-llama/Llama-3.1-8B-Instruct:cheapest'),

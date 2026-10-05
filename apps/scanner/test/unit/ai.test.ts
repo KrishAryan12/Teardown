@@ -145,8 +145,8 @@ describe('AiChain', () => {
     expect(r.model).toBe('gemini/gemini-3.5-flash-lite');
     const body = JSON.parse((fetchImpl.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
     expect(body.response_format).toEqual({ type: 'json_object' });
-    expect(body.reasoning_effort).toBe('none');
-    expect(body.max_tokens).toBe(1400);
+    expect(body.reasoning_effort).toBe('minimal');
+    expect(body.max_tokens).toBe(2048);
     expect(body.temperature).toBe(0.2);
   });
 
