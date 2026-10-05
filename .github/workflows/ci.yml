@@ -50,6 +50,8 @@ jobs:
       - run: pnpm --filter @teardown/web build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
+      # Files the functions read from disk at runtime must be in the Vercel bundle.
+      - run: node apps/web/scripts/check-trace.mjs
       - name: Install Chromium
         run: pnpm --filter @teardown/scanner exec playwright install --with-deps chromium
       - name: Axe check on the landing and sample report
