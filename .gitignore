@@ -22,3 +22,6 @@ OWNER_SETUP.md
 
 # Next.js generated
 apps/web/next-env.d.ts
+
+# Brag launch video workspace (final assets are copied to docs/)
+brag-output*/
