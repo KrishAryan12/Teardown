@@ -1,4 +1,5 @@
 import type { Category, Report, Severity } from '@teardown/core';
+import { exportFileStem } from '@teardown/core/exporters';
 
 export const CATEGORY_LABEL: Record<Category, string> = {
   performance: 'Performance',
@@ -20,8 +21,8 @@ export function band(score: number): 'good' | 'fair' | 'poor' {
   return score >= 90 ? 'good' : score >= 50 ? 'fair' : 'poor';
 }
 
-export function fileStem(r: Pick<Report, 'target' | 'generatedAt'>): string {
-  return `teardown-${r.target.host.replace(/[^a-z0-9.-]/gi, '')}-${r.generatedAt.slice(0, 10)}`;
+export function fileStem(r: Pick<Report, 'target'>): string {
+  return exportFileStem(r);
 }
 
 export function formatDate(iso: string): string {

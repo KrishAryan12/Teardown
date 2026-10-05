@@ -263,7 +263,7 @@ describe('API', () => {
     const res = await app.inject({ method: 'POST', url: '/api/export/pdf', payload: report as unknown as object });
     expect(res.statusCode).toBe(200);
     expect(res.headers['content-type']).toBe('application/pdf');
-    expect(res.headers['content-disposition']).toMatch(/attachment; filename="teardown-/);
+    expect(res.headers['content-disposition']).toMatch(/attachment; filename="[a-z0-9-]+-teardown.pdf"/);
   });
 
   it('refuses to start with ALLOW_PRIVATE_TARGETS in production', () => {

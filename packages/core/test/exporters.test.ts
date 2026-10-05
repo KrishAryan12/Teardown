@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AiOutputSchema, ReportSchema, toAgentMarkdown, toJson, toJsonObject, brandToTokens, tokensToCss, code, mdText } from '../src';
+import { AiOutputSchema, ReportSchema, toAgentMarkdown, toJson, toJsonObject, brandToTokens, tokensToCss, code, mdText, siteSlug, exportFileStem } from '../src';
 import { makeFinding, makeReport } from './fixtures';
 
 const report = makeReport([
@@ -112,5 +112,25 @@ describe('toAgentMarkdown', () => {
     const many = Array.from({ length: 12 }, (_, i) => makeFinding('seo.img.alt', { selector: `img:nth-of-type(${i + 1})` }));
     const md = toAgentMarkdown(makeReport(many), { maxInstances: 3 });
     expect(md).toContain('  - and 9 more');
+  });
+});
+
+describe('export file names', () => {
+  it.each([
+    ['ashmita-barman-portfolio.vercel.app', 'ashmita-barman-portfolio'],
+    ['www.stripe.com', 'stripe'],
+    ['docs.stripe.com', 'docs-stripe'],
+    ['www.bbc.co.uk', 'bbc'],
+    ['kilnandco.example', 'kilnandco'],
+    ['user.github.io', 'user'],
+    ['shop.example.de', 'shop-example'],
+    ['93.184.215.14', '93-184-215-14'],
+    ['xn--bcher-kva.example', 'xn-bcher-kva'],
+  ])('%s → %s', (host, slug) => {
+    expect(siteSlug(host)).toBe(slug);
+  });
+
+  it('names every export <site>-teardown', () => {
+    expect(exportFileStem({ target: { inputUrl: '', finalUrl: '', host: 'ashmita-barman-portfolio.vercel.app' } })).toBe('ashmita-barman-portfolio-teardown');
   });
 });

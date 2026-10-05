@@ -9,7 +9,7 @@
  */
 import { randomUUID } from 'node:crypto';
 import { LRUCache } from 'lru-cache';
-import { RULESET_VERSION, ReportSchema, ScanRequestSchema, type Report, type ScanEvent } from '@teardown/core';
+import { RULESET_VERSION, ReportSchema, ScanRequestSchema, exportFileStem, type Report, type ScanEvent } from '@teardown/core';
 import { VERSION, loadConfig, type Config } from './config';
 import { HTTP_STATUS, ScanError, errorBody, retryAfter, toScanError } from './errors';
 import { normalizeUrl } from './security/guard';
@@ -256,7 +256,7 @@ export async function pdfHandler(req: Request): Promise<Response> {
     const parsed = ReportSchema.safeParse(body);
     if (!parsed.success) throw new ScanError('BAD_REQUEST', "That report isn't in the expected format, so it can't be turned into a PDF.");
     const pdf = await renderPdf(parsed.data, s.services.pool);
-    const name = `teardown-${parsed.data.target.host.replace(/[^a-z0-9.-]/gi, '')}-${parsed.data.generatedAt.slice(0, 10)}.pdf`;
+    const name = `${exportFileStem(parsed.data)}.pdf`;
     return new Response(new Uint8Array(pdf), {
       headers: { 'content-type': 'application/pdf', 'content-disposition': `attachment; filename="${name}"`, ...SECURITY_HEADERS },
     });

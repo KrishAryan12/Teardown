@@ -1,6 +1,6 @@
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import cors from '@fastify/cors';
-import { ReportSchema, ScanRequestSchema } from '@teardown/core';
+import { ReportSchema, ScanRequestSchema, exportFileStem } from '@teardown/core';
 import { VERSION, type Config } from './config';
 import { HTTP_STATUS, ScanError, errorBody, retryAfter } from './errors';
 import { normalizeUrl } from './security/guard';
@@ -190,7 +190,7 @@ export async function buildServer(services: Services, opts: ServerOptions = {}):
     const parsed = ReportSchema.safeParse(req.body);
     if (!parsed.success) throw new ScanError('BAD_REQUEST', "That report isn't in the expected format, so it can't be turned into a PDF.");
     const buf = await pdf(parsed.data, services.pool);
-    const name = `teardown-${parsed.data.target.host.replace(/[^a-z0-9.-]/gi, '')}-${parsed.data.generatedAt.slice(0, 10)}.pdf`;
+    const name = `${exportFileStem(parsed.data)}.pdf`;
     return reply.header('content-type', 'application/pdf').header('content-disposition', `attachment; filename="${name}"`).send(buf);
   });
 

@@ -2,6 +2,38 @@ import { allFindings, orderedGroups } from './scoring';
 import { brandToTokens, tokensToCss, type DesignTokens } from './tokens';
 import type { Finding, Group, Report } from './schema';
 
+/* -------------------------------- File names ------------------------------- */
+
+/** Hosting domains whose subdomain is the site's name (`name.vercel.app` → `name`). */
+const HOSTING_SUFFIXES = [
+  'vercel.app', 'netlify.app', 'github.io', 'gitlab.io', 'pages.dev', 'workers.dev', 'web.app', 'firebaseapp.com',
+  'herokuapp.com', 'onrender.com', 'fly.dev', 'railway.app', 'surge.sh', 'glitch.me', 'webflow.io', 'framer.website',
+  'framer.app', 'notion.site', 'carrd.co', 'replit.app', 'wixsite.com', 'squarespace.com', 'wordpress.com', 'blogspot.com',
+];
+/** Second-level labels used under country TLDs (`bbc.co.uk` → `bbc`). */
+const SECOND_LEVEL = new Set(['co', 'com', 'org', 'net', 'ac', 'gov', 'edu', 'ltd', 'plc']);
+
+/** A short, readable slug for a host: `www.stripe.com` → `stripe`, `name.vercel.app` → `name`. */
+export function siteSlug(host: string): string {
+  let h = host.toLowerCase().replace(/\.$/, '').replace(/^www\./, '');
+  const suffix = HOSTING_SUFFIXES.find((s) => h.endsWith(`.${s}`));
+  let labels: string[];
+  if (suffix) labels = h.slice(0, -(suffix.length + 1)).split('.');
+  else if (/^[\d.]+$/.test(h) || h.includes(':')) labels = [h];
+  else {
+    labels = h.split('.');
+    if (labels.length > 1) labels.pop();
+    if (labels.length > 1 && h.split('.').at(-1)!.length === 2 && SECOND_LEVEL.has(labels.at(-1)!)) labels.pop();
+  }
+  h = labels.join('-').replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  return h.slice(0, 60).replace(/-$/, '') || 'site';
+}
+
+/** File name stem for every export of a report: `<site>-teardown` (`.pdf`, `.md`, `.json`). */
+export function exportFileStem(r: Pick<Report, 'target'>): string {
+  return `${siteSlug(r.target.host)}-teardown`;
+}
+
 /* ---------------------------------- JSON ---------------------------------- */
 
 export interface JsonExportOptions {

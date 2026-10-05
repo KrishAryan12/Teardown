@@ -215,7 +215,7 @@ export function Specimen({ report, pageIndex, taskNo, active, setActive, onOpen,
             {src ? (
               <img src={src} width={size.w} height={size.h} alt={`Screenshot of ${report.target.host} at ${viewport} width, annotated with numbered pins`} />
             ) : (
-              <p className="no-shot">No screenshot for this view. {report.reducedAccuracy ? 'The browser was unavailable for this scan.' : 'It was left out to keep the report small.'}</p>
+              <p className="no-shot">No screenshot for this view. {noShotReason(report)}</p>
             )}
             {src &&
               activePins.map((p) => {
@@ -286,4 +286,11 @@ export function Specimen({ report, pageIndex, taskNo, active, setActive, onOpen,
       <style>{`@keyframes td-slide{from{transform:translateY(24px);opacity:.0}to{transform:none;opacity:1}}`}</style>
     </section>
   );
+}
+
+/** Why a screenshot is missing, from what the scanner recorded. */
+function noShotReason(report: Report): string {
+  if (report.reducedAccuracy) return 'The browser was unavailable for this scan.';
+  if (report.limits.screenshotsDropped) return 'It was left out to keep the report small.';
+  return 'It could not be captured within the time allowed for this page.';
 }

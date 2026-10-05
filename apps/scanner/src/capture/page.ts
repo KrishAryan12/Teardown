@@ -29,6 +29,8 @@ const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 390, height: 844 };
 const MAX_SHOT_H = 8000;
 const MOBILE_SHOT_H = 2500;
+/** Time kept back for the mobile pass when bounding axe-core. */
+const MOBILE_RESERVE_MS = 12_000;
 
 /* Plain-string scripts: functions passed to evaluate can pick up bundler helpers (see D-03). */
 const AUTOSCROLL = `(async () => {
@@ -300,71 +302,74 @@ export async function capturePage(url: string, deadline: number, o: CaptureOptio
     );
     if (collected.brand) collected.brand.platformFonts = await platformFonts(cdp);
 
-    // 4. Axe
+    // axe-core run plus pin positions (document coordinates) for each violation node.
+    const runAxe = async (): Promise<AxeViolation[]> => {
+      const res = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
+        .disableRules(['color-contrast-enhanced'])
+        .analyze();
+      const violations: AxeViolation[] = res.violations.map((v) => ({
+        id: v.id,
+        impact: (v.impact ?? null) as AxeViolation['impact'],
+        help: v.help,
+        description: v.description,
+        helpUrl: v.helpUrl,
+        tags: v.tags,
+        nodeCount: v.nodes.length,
+        nodes: v.nodes.slice(0, 10).map((n) => {
+          const data = (n.any?.[0]?.data ?? {}) as { contrastRatio?: number; expectedContrastRatio?: string; fgColor?: string; bgColor?: string };
+          return {
+            target: Array.isArray(n.target) ? n.target.map(String).join(' ') : String(n.target),
+            html: n.html.slice(0, 300),
+            failureSummary: n.failureSummary?.slice(0, 300),
+            ...(v.id === 'color-contrast' && data.contrastRatio
+              ? { measured: `${data.contrastRatio}:1 (${data.fgColor} on ${data.bgColor})`, expected: `>= ${data.expectedContrastRatio ?? '4.5:1'}` }
+              : {}),
+          };
+        }),
+      }));
+      const targets = violations.flatMap((v) => v.nodes.map((n) => n.target));
+      const rects = (await page
+        .evaluate(
+          `(${String.raw`(sels) => sels.map((s) => {
+            try {
+              const el = document.querySelector(s);
+              if (!el) return null;
+              const r = el.getBoundingClientRect();
+              if (r.width < 1 || r.height < 1) return null;
+              return { x: Math.round(r.left + scrollX), y: Math.round(r.top + scrollY), w: Math.round(r.width), h: Math.round(r.height) };
+            } catch (e) { return null; }
+          })`})(${JSON.stringify(targets)})`,
+        )
+        .catch(() => [])) as (AxeViolation['nodes'][number]['bbox'])[];
+      let i = 0;
+      for (const v of violations) for (const n of v.nodes) n.bbox = rects[i++] ?? null;
+      return violations;
+    };
+
+    // 4. Desktop screenshot. Taken before axe so a slow accessibility run (software rendering on a
+    // small serverless CPU) can't use up the page budget and starve the annotated specimen.
+    const screenshots: PageCapture['screenshots'] = {};
+    const docH = Math.max(1, Math.min(MAX_SHOT_H, Number(await page.evaluate(DOC_HEIGHT).catch(() => DESKTOP.height))));
+    if (o.desktopScreenshot && remaining() > 3000) {
+      screenshots.desktop = await step('screenshot', () =>
+        withTimeout(shot(page, DESKTOP.width, docH, 1280, o.quality), Math.max(2000, remaining() - 2000), () => new Error('screenshot timeout')),
+      ).catch(() => {
+        notes.push('Desktop screenshot could not be captured in time.');
+        return undefined;
+      });
+    } else if (o.desktopScreenshot) notes.push('Skipped the desktop screenshot: page budget nearly used up.');
+
+    // 5. Axe, bounded as a whole (analysis plus pin positions), leaving time for the mobile pass.
+    const axeBudget = Math.min(25_000, remaining() - (o.mobile ? MOBILE_RESERVE_MS : 2000));
     let axe: AxeViolation[] | null = null;
-    if (remaining() > 6000) {
-      axe = await step('accessibility checks', async () => {
-        const res = await withTimeout(
-          new AxeBuilder({ page })
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
-            .disableRules(['color-contrast-enhanced'])
-            .analyze(),
-          Math.min(20_000, remaining() - 2000),
-          () => new Error('axe timeout'),
-        );
-        const violations: AxeViolation[] = res.violations.map((v) => ({
-          id: v.id,
-          impact: (v.impact ?? null) as AxeViolation['impact'],
-          help: v.help,
-          description: v.description,
-          helpUrl: v.helpUrl,
-          tags: v.tags,
-          nodeCount: v.nodes.length,
-          nodes: v.nodes.slice(0, 10).map((n) => {
-            const data = (n.any?.[0]?.data ?? {}) as { contrastRatio?: number; expectedContrastRatio?: string; fgColor?: string; bgColor?: string };
-            return {
-              target: Array.isArray(n.target) ? n.target.map(String).join(' ') : String(n.target),
-              html: n.html.slice(0, 300),
-              failureSummary: n.failureSummary?.slice(0, 300),
-              ...(v.id === 'color-contrast' && data.contrastRatio
-                ? { measured: `${data.contrastRatio}:1 (${data.fgColor} on ${data.bgColor})`, expected: `>= ${data.expectedContrastRatio ?? '4.5:1'}` }
-                : {}),
-            };
-          }),
-        }));
-        // Bounding boxes for pins, in document coordinates.
-        const targets = violations.flatMap((v) => v.nodes.map((n) => n.target));
-        const rects = (await page
-          .evaluate(
-            `(${String.raw`(sels) => sels.map((s) => {
-              try {
-                const el = document.querySelector(s);
-                if (!el) return null;
-                const r = el.getBoundingClientRect();
-                if (r.width < 1 || r.height < 1) return null;
-                return { x: Math.round(r.left + scrollX), y: Math.round(r.top + scrollY), w: Math.round(r.width), h: Math.round(r.height) };
-              } catch (e) { return null; }
-            })`})(${JSON.stringify(targets)})`,
-          )
-          .catch(() => [])) as (AxeViolation['nodes'][number]['bbox'])[];
-        let i = 0;
-        for (const v of violations) for (const n of v.nodes) n.bbox = rects[i++] ?? null;
-        return violations;
-      }).catch(() => {
+    if (axeBudget > 4000) {
+      axe = await step('accessibility checks', () => withTimeout(runAxe(), axeBudget, () => new Error('axe timeout'))).catch(() => {
         notes.push('Accessibility engine (axe-core) did not finish in time; own accessibility checks still ran.');
         return null;
       });
     } else notes.push('Skipped axe-core: page budget nearly used up.');
 
-    // 5. Screenshot
-    const screenshots: PageCapture['screenshots'] = {};
-    const docH = Math.max(1, Math.min(MAX_SHOT_H, Number(await page.evaluate(DOC_HEIGHT).catch(() => DESKTOP.height))));
-    if (o.desktopScreenshot && remaining() > 3000) {
-      screenshots.desktop = await step('screenshot', () => shot(page, DESKTOP.width, docH, 1280, o.quality)).catch(() => {
-        notes.push('Desktop screenshot failed.');
-        return undefined;
-      });
-    }
     const network = net.summary(counters);
     const title = collected.facts.head.title || (await page.title().catch(() => ''));
     const finalUrl = page.url();
